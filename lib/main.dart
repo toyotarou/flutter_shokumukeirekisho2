@@ -30,9 +30,18 @@ class MyApp extends StatelessWidget {
 
   final Isar isar;
 
+  ///
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.transparent,
+        ),
+        useMaterial3: false,
+        colorScheme: ColorScheme.fromSwatch(brightness: Brightness.dark),
+        fontFamily: 'KiwiMaru',
+      ),
       themeMode: ThemeMode.dark,
       title: '職務経歴書',
       debugShowCheckedModeBanner: false,

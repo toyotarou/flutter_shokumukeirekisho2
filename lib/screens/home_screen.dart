@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
 
 import '../extensions/extensions.dart';
+import 'components/agent_input_alert.dart';
+import 'components/parts/work_history_dialog.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key, required this.isar});
@@ -34,14 +36,48 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: SafeArea(
-        child: SingleChildScrollView(
+      appBar: AppBar(),
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            Container(width: context.screenSize.width),
+            const SizedBox(height: 20),
+            displayYearsWidget(),
+            displayShokurekiList(),
+          ],
+        ),
+      ),
+      drawer: _dispDrawer(),
+    );
+  }
+
+  ///
+  Widget _dispDrawer() {
+    return Drawer(
+      backgroundColor: Colors.blueGrey.withOpacity(0.2),
+      child: SingleChildScrollView(
+        child: Container(
+          padding: const EdgeInsets.only(left: 10),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Container(width: context.screenSize.width),
-              const SizedBox(height: 20),
-              displayYearsWidget(),
-              displayShokurekiList(),
+              const SizedBox(height: 60),
+              GestureDetector(
+                onTap: () {
+                  WorkHistoryDialog(
+                    context: context,
+                    widget: const AgentInputAlert(),
+                  );
+                },
+                child: Expanded(
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
+                    margin: const EdgeInsets.all(5),
+                    child: const Text('エージェント名登録'),
+                  ),
+                ),
+              ),
             ],
           ),
         ),

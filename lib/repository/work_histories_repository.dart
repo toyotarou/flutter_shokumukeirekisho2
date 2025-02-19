@@ -4,17 +4,16 @@ import '../collections/work_history.dart';
 
 class WorkHistoriesRepository {
   ///
-  IsarCollection<WorkHistory> getCollection({required Isar isar}) => isar.workHistorys;
+  Future<WorkHistory?> getWorkHistory({required Isar isar, required int id}) async => isar.workHistorys.get(id);
 
   ///
-  Future<WorkHistory?> getWorkHistory({required Isar isar, required int id}) async {
-    final IsarCollection<WorkHistory> workHistoriesCollection = getCollection(isar: isar);
-    return workHistoriesCollection.get(id);
-  }
+  Future<List<WorkHistory>?> getWorkHistoryList({required Isar isar}) async => isar.workHistorys.where().findAll();
 
   ///
-  Future<List<WorkHistory>?> getWorkHistoryList({required Isar isar}) async {
-    final IsarCollection<WorkHistory> workHistoriesCollection = getCollection(isar: isar);
-    return workHistoriesCollection.where().findAll();
-  }
+  Future<void> inputWorkHistory({required Isar isar, required WorkHistory workHistory}) async =>
+      isar.writeTxn(() async => isar.workHistorys.put(workHistory));
+
+  ///
+  Future<void> updateWorkHistory({required Isar isar, required WorkHistory workHistory}) async =>
+      isar.workHistorys.put(workHistory);
 }
