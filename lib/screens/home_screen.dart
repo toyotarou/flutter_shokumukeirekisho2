@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
 
+import '../collections/agent.dart';
+import '../collections/work_history.dart';
 import '../extensions/extensions.dart';
+import '../repository/agent_repository.dart';
+import '../repository/work_histories_repository.dart';
+import '../utility/function.dart';
 import 'components/agent_input_alert.dart';
 import 'components/parts/work_history_dialog.dart';
 import 'components/work_history_input_alert.dart';
@@ -23,6 +28,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   List<GlobalKey> globalKeyList = <GlobalKey<State<StatefulWidget>>>[];
 
+  List<WorkHistory>? workHistoryList = <WorkHistory>[];
+  Map<String, WorkHistory>? workHistoryMap = <String, WorkHistory>{};
+
+  Map<String, WorkHistory> totalWorkHistoryMap = <String, WorkHistory>{};
+
+  Map<int, String> agentMap = {};
+
   ///
   @override
   void initState() {
@@ -30,6 +42,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     // ignore: always_specify_types
     globalKeyList = List.generate(100, (int index) => GlobalKey());
+
+    makeWorkHistoryList();
+
+    makeAgentMap();
   }
 
   ///
@@ -121,13 +137,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children:
             // ignore: always_specify_types
             List.generate(DateTime.now().year - startYear + 1, (int index) => index + startYear).map(
           (int element) {
             return Container(
               key: globalKeyList[element - startYear],
-              width: context.screenSize.width * 0.5,
+              width: context.screenSize.width * 0.7,
               margin: const EdgeInsets.all(2),
               padding: const EdgeInsets.all(2),
               child: DefaultTextStyle(
@@ -150,6 +167,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           children: List.generate(12, (int index2) => index2).map(
                             (int element2) {
                               final int age = calculateAge(birthday, DateTime(element, element2 + 1));
+
+                              final String yearmonth = '$element-${(element2 + 1).toString().padLeft(2, '0')}';
 
                               return Container(
                                 margin: const EdgeInsets.all(2),
@@ -178,8 +197,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                                       context: context,
                                                       widget: WorkHistoryInputAlert(
                                                         isar: widget.isar,
-                                                        ymStart:
-                                                            '$element-${(element2 + 1).toString().padLeft(2, '0')}',
+                                                        ymStart: yearmonth,
                                                       ),
                                                     );
                                                   },
@@ -189,19 +207,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                             ),
                                           ],
                                         ),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: <Widget>[
-                                            const Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: <Widget>[
-                                                Text('a'),
-                                                SizedBox(height: 5),
-                                                Text('b'),
-                                              ],
-                                            ),
-                                            Container(),
-                                          ],
+                                        ConstrainedBox(
+                                          constraints: BoxConstraints(minHeight: context.screenSize.height / 15),
+                                          child: (totalWorkHistoryMap[yearmonth] != null)
+                                              ? Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    Text(totalWorkHistoryMap[yearmonth]!.site),
+                                                    const SizedBox(height: 5),
+                                                    Text(agentMap[totalWorkHistoryMap[yearmonth]!.agentId] ?? ''),
+                                                  ],
+                                                )
+                                              : Container(),
                                         ),
                                       ],
                                     ),
@@ -246,5 +263,43 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       age--;
     }
     return age;
+  }
+
+  ///
+  Future<void> makeWorkHistoryList() async {
+    workHistoryList = <WorkHistory>[];
+
+    await WorkHistoriesRepository().getWorkHistoryList(isar: widget.isar).then((List<WorkHistory>? value) {
+      if (mounted) {
+        setState(() {
+          workHistoryList = value;
+
+          if (value!.isNotEmpty) {
+            for (final WorkHistory element in value) {
+              workHistoryMap?[element.startDate] = element;
+            }
+
+            if (workHistoryMap != null) {
+              totalWorkHistoryMap = makeTotalWorkHistoryMap(workHistoryMap: workHistoryMap!);
+            }
+          }
+        });
+      }
+    });
+  }
+
+  ///
+  Future<void> makeAgentMap() async {
+    await AgentRepository().getAgentList(isar: widget.isar).then((List<Agent>? value) {
+      if (mounted) {
+        setState(() {
+          if (value!.isNotEmpty) {
+            for (final Agent element in value) {
+              agentMap[element.id] = element.name;
+            }
+          }
+        });
+      }
+    });
   }
 }
