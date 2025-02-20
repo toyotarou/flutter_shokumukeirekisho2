@@ -66,16 +66,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 onTap: () {
                   WorkHistoryDialog(
                     context: context,
-                    widget: const AgentInputAlert(),
+                    widget: AgentInputAlert(isar: widget.isar),
                   );
                 },
-                child: Expanded(
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
-                    margin: const EdgeInsets.all(5),
-                    child: const Text('エージェント名登録'),
-                  ),
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
+                  margin: const EdgeInsets.all(5),
+                  child: const Text('エージェント名登録'),
                 ),
               ),
             ],

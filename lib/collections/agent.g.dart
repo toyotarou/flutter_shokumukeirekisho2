@@ -21,16 +21,6 @@ const AgentSchema = CollectionSchema(
       id: 0,
       name: r'name',
       type: IsarType.string,
-    ),
-    r'ymEnd': PropertySchema(
-      id: 1,
-      name: r'ymEnd',
-      type: IsarType.string,
-    ),
-    r'ymStart': PropertySchema(
-      id: 2,
-      name: r'ymStart',
-      type: IsarType.string,
     )
   },
   estimateSize: _agentEstimateSize,
@@ -54,8 +44,6 @@ int _agentEstimateSize(
 ) {
   var bytesCount = offsets.last;
   bytesCount += 3 + object.name.length * 3;
-  bytesCount += 3 + object.ymEnd.length * 3;
-  bytesCount += 3 + object.ymStart.length * 3;
   return bytesCount;
 }
 
@@ -66,8 +54,6 @@ void _agentSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.name);
-  writer.writeString(offsets[1], object.ymEnd);
-  writer.writeString(offsets[2], object.ymStart);
 }
 
 Agent _agentDeserialize(
@@ -79,8 +65,6 @@ Agent _agentDeserialize(
   final object = Agent();
   object.id = id;
   object.name = reader.readString(offsets[0]);
-  object.ymEnd = reader.readString(offsets[1]);
-  object.ymStart = reader.readString(offsets[2]);
   return object;
 }
 
@@ -92,10 +76,6 @@ P _agentDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readString(offset)) as P;
-    case 1:
-      return (reader.readString(offset)) as P;
-    case 2:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -369,264 +349,6 @@ extension AgentQueryFilter on QueryBuilder<Agent, Agent, QFilterCondition> {
       ));
     });
   }
-
-  QueryBuilder<Agent, Agent, QAfterFilterCondition> ymEndEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'ymEnd',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Agent, Agent, QAfterFilterCondition> ymEndGreaterThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'ymEnd',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Agent, Agent, QAfterFilterCondition> ymEndLessThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'ymEnd',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Agent, Agent, QAfterFilterCondition> ymEndBetween(
-    String lower,
-    String upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'ymEnd',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Agent, Agent, QAfterFilterCondition> ymEndStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'ymEnd',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Agent, Agent, QAfterFilterCondition> ymEndEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'ymEnd',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Agent, Agent, QAfterFilterCondition> ymEndContains(String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'ymEnd',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Agent, Agent, QAfterFilterCondition> ymEndMatches(String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'ymEnd',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Agent, Agent, QAfterFilterCondition> ymEndIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'ymEnd',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<Agent, Agent, QAfterFilterCondition> ymEndIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'ymEnd',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<Agent, Agent, QAfterFilterCondition> ymStartEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'ymStart',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Agent, Agent, QAfterFilterCondition> ymStartGreaterThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'ymStart',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Agent, Agent, QAfterFilterCondition> ymStartLessThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'ymStart',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Agent, Agent, QAfterFilterCondition> ymStartBetween(
-    String lower,
-    String upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'ymStart',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Agent, Agent, QAfterFilterCondition> ymStartStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'ymStart',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Agent, Agent, QAfterFilterCondition> ymStartEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'ymStart',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Agent, Agent, QAfterFilterCondition> ymStartContains(
-      String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'ymStart',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Agent, Agent, QAfterFilterCondition> ymStartMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'ymStart',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Agent, Agent, QAfterFilterCondition> ymStartIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'ymStart',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<Agent, Agent, QAfterFilterCondition> ymStartIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'ymStart',
-        value: '',
-      ));
-    });
-  }
 }
 
 extension AgentQueryObject on QueryBuilder<Agent, Agent, QFilterCondition> {}
@@ -643,30 +365,6 @@ extension AgentQuerySortBy on QueryBuilder<Agent, Agent, QSortBy> {
   QueryBuilder<Agent, Agent, QAfterSortBy> sortByNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Agent, Agent, QAfterSortBy> sortByYmEnd() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'ymEnd', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Agent, Agent, QAfterSortBy> sortByYmEndDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'ymEnd', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Agent, Agent, QAfterSortBy> sortByYmStart() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'ymStart', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Agent, Agent, QAfterSortBy> sortByYmStartDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'ymStart', Sort.desc);
     });
   }
 }
@@ -695,30 +393,6 @@ extension AgentQuerySortThenBy on QueryBuilder<Agent, Agent, QSortThenBy> {
       return query.addSortBy(r'name', Sort.desc);
     });
   }
-
-  QueryBuilder<Agent, Agent, QAfterSortBy> thenByYmEnd() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'ymEnd', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Agent, Agent, QAfterSortBy> thenByYmEndDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'ymEnd', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Agent, Agent, QAfterSortBy> thenByYmStart() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'ymStart', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Agent, Agent, QAfterSortBy> thenByYmStartDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'ymStart', Sort.desc);
-    });
-  }
 }
 
 extension AgentQueryWhereDistinct on QueryBuilder<Agent, Agent, QDistinct> {
@@ -726,20 +400,6 @@ extension AgentQueryWhereDistinct on QueryBuilder<Agent, Agent, QDistinct> {
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'name', caseSensitive: caseSensitive);
-    });
-  }
-
-  QueryBuilder<Agent, Agent, QDistinct> distinctByYmEnd(
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'ymEnd', caseSensitive: caseSensitive);
-    });
-  }
-
-  QueryBuilder<Agent, Agent, QDistinct> distinctByYmStart(
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'ymStart', caseSensitive: caseSensitive);
     });
   }
 }
@@ -754,18 +414,6 @@ extension AgentQueryProperty on QueryBuilder<Agent, Agent, QQueryProperty> {
   QueryBuilder<Agent, String, QQueryOperations> nameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'name');
-    });
-  }
-
-  QueryBuilder<Agent, String, QQueryOperations> ymEndProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'ymEnd');
-    });
-  }
-
-  QueryBuilder<Agent, String, QQueryOperations> ymStartProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'ymStart');
     });
   }
 }

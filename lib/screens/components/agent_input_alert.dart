@@ -2,11 +2,17 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:isar/isar.dart';
 
+import '../../collections/agent.dart';
 import '../../extensions/extensions.dart';
+import '../../repository/agent_repository.dart';
+import 'parts/error_dialog.dart';
 
 class AgentInputAlert extends ConsumerStatefulWidget {
-  const AgentInputAlert({super.key});
+  const AgentInputAlert({super.key, required this.isar});
+
+  final Isar isar;
 
   @override
   ConsumerState<AgentInputAlert> createState() => _AgentInputAlertState();
@@ -14,6 +20,18 @@ class AgentInputAlert extends ConsumerStatefulWidget {
 
 class _AgentInputAlertState extends ConsumerState<AgentInputAlert> {
   final TextEditingController _agentNameEditingController = TextEditingController();
+
+  List<Agent>? agentList = <Agent>[];
+
+  int _agentId = 0;
+
+  ///
+  @override
+  void initState() {
+    super.initState();
+
+    _makeAgentList();
+  }
 
   ///
   @override
@@ -39,12 +57,19 @@ class _AgentInputAlertState extends ConsumerState<AgentInputAlert> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Container(),
-                TextButton(
-                  onPressed: _inputAgentName,
-                  child: const Text('エージェント名を追加する', style: TextStyle(fontSize: 12)),
-                ),
+                if (_agentId != 0)
+                  TextButton(
+                    onPressed: _editAgentName,
+                    child: const Text('エージェント名を更新する', style: TextStyle(fontSize: 12)),
+                  )
+                else
+                  TextButton(
+                    onPressed: _inputAgentName,
+                    child: const Text('エージェント名を追加する', style: TextStyle(fontSize: 12)),
+                  ),
               ],
             ),
+            Expanded(child: displayAgentNameList()),
           ],
         ),
       ),
@@ -75,7 +100,6 @@ class _AgentInputAlertState extends ConsumerState<AgentInputAlert> {
             child: Column(
               children: <Widget>[
                 TextField(
-                  keyboardType: TextInputType.number,
                   controller: _agentNameEditingController,
                   decoration: const InputDecoration(
                     isDense: true,
@@ -97,5 +121,116 @@ class _AgentInputAlertState extends ConsumerState<AgentInputAlert> {
   }
 
   ///
-  void _inputAgentName() {}
+  Future<void> _inputAgentName() async {
+    bool errFlg = false;
+
+    if (_agentNameEditingController.text.trim() == '') {
+      errFlg = true;
+    }
+
+    if (errFlg) {
+      // ignore: always_specify_types
+      Future.delayed(
+        Duration.zero,
+        () => error_dialog(
+            // ignore: use_build_context_synchronously
+            context: context,
+            title: '登録できません。',
+            content: '値を正しく入力してください。'),
+      );
+
+      return;
+    }
+
+    final Agent agent = Agent()..name = _agentNameEditingController.text.trim();
+
+    await AgentRepository().inputAgent(isar: widget.isar, agent: agent).then(
+      // ignore: always_specify_types
+      (value) {
+        _agentNameEditingController.clear();
+
+        if (mounted) {
+          Navigator.pop(context);
+        }
+      },
+    );
+  }
+
+  ///
+  Widget displayAgentNameList() {
+    final List<Widget> list = <Widget>[];
+
+    agentList?.forEach((Agent element) {
+      list.add(Container(
+        padding: const EdgeInsets.symmetric(vertical: 3),
+        decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white.withOpacity(0.3)))),
+        child: Row(
+          children: <Widget>[
+            Expanded(child: Text(element.name, maxLines: 1, overflow: TextOverflow.ellipsis)),
+            GestureDetector(
+              onTap: () {
+                _agentNameEditingController.text = element.name;
+
+                setState(() => _agentId = element.id);
+              },
+              child: Icon(Icons.edit, color: Colors.white.withOpacity(0.5)),
+            ),
+          ],
+        ),
+      ));
+    });
+
+    return SingleChildScrollView(
+      child: DefaultTextStyle(style: const TextStyle(fontSize: 12), child: Column(children: list)),
+    );
+  }
+
+  ///
+  Future<void> _makeAgentList() async {
+    await AgentRepository().getAgentList(isar: widget.isar).then((List<Agent>? value) {
+      if (mounted) {
+        setState(() => agentList = value);
+      }
+    });
+  }
+
+  ///
+  Future<void> _editAgentName() async {
+    bool errFlg = false;
+
+    if (_agentNameEditingController.text.trim() == '') {
+      errFlg = true;
+    }
+
+    if (errFlg) {
+      // ignore: always_specify_types
+      Future.delayed(
+        Duration.zero,
+        () => error_dialog(
+            // ignore: use_build_context_synchronously
+            context: context,
+            title: '登録できません。',
+            content: '値を正しく入力してください。'),
+      );
+
+      return;
+    }
+
+    await widget.isar.writeTxn(() async {
+      await AgentRepository().getAgent(isar: widget.isar, id: _agentId).then((Agent? value) async {
+        value!..name = _agentNameEditingController.text.trim();
+
+        await AgentRepository()
+            .updateAgent(isar: widget.isar, agent: value)
+            // ignore: always_specify_types
+            .then((value) {
+          _agentNameEditingController.clear();
+
+          if (mounted) {
+            Navigator.pop(context);
+          }
+        });
+      });
+    });
+  }
 }

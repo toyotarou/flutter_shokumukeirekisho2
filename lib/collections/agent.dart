@@ -7,7 +7,4 @@ class Agent {
   Id id = Isar.autoIncrement;
 
   late String name;
-
-  late String ymStart;
-  late String ymEnd;
 }
