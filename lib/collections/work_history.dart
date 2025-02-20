@@ -6,11 +6,14 @@ part 'work_history.g.dart';
 class WorkHistory {
   Id id = Isar.autoIncrement;
 
-  late String year;
-  late String month;
+  late String startDate;
+  late String endDate;
 
   late String factSite;
-  late String factAgentId;
+  late int factAgentId;
 
   late String fakeSite;
+  late int fakeAgentId;
+
+  late int factFake;
 }

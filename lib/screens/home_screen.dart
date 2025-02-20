@@ -5,6 +5,7 @@ import 'package:isar/isar.dart';
 import '../extensions/extensions.dart';
 import 'components/agent_input_alert.dart';
 import 'components/parts/work_history_dialog.dart';
+import 'components/work_history_input_alert.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key, required this.isar});
@@ -172,7 +173,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                                 ),
                                                 const SizedBox(width: 20),
                                                 GestureDetector(
-                                                  onTap: () {},
+                                                  onTap: () {
+                                                    WorkHistoryDialog(
+                                                      context: context,
+                                                      widget: WorkHistoryInputAlert(
+                                                        isar: widget.isar,
+                                                        ymStart:
+                                                            '$element-${(element2 + 1).toString().padLeft(2, '0')}',
+                                                      ),
+                                                    );
+                                                  },
                                                   child: Icon(Icons.input, color: Colors.white.withOpacity(0.3)),
                                                 ),
                                               ],

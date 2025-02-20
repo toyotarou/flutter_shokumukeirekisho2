@@ -17,29 +17,39 @@ const WorkHistorySchema = CollectionSchema(
   name: r'WorkHistory',
   id: 1156323439076079268,
   properties: {
-    r'factAgentId': PropertySchema(
+    r'endDate': PropertySchema(
       id: 0,
-      name: r'factAgentId',
+      name: r'endDate',
       type: IsarType.string,
     ),
-    r'factSite': PropertySchema(
+    r'factAgentId': PropertySchema(
       id: 1,
+      name: r'factAgentId',
+      type: IsarType.long,
+    ),
+    r'factFake': PropertySchema(
+      id: 2,
+      name: r'factFake',
+      type: IsarType.long,
+    ),
+    r'factSite': PropertySchema(
+      id: 3,
       name: r'factSite',
       type: IsarType.string,
     ),
+    r'fakeAgentId': PropertySchema(
+      id: 4,
+      name: r'fakeAgentId',
+      type: IsarType.long,
+    ),
     r'fakeSite': PropertySchema(
-      id: 2,
+      id: 5,
       name: r'fakeSite',
       type: IsarType.string,
     ),
-    r'month': PropertySchema(
-      id: 3,
-      name: r'month',
-      type: IsarType.string,
-    ),
-    r'year': PropertySchema(
-      id: 4,
-      name: r'year',
+    r'startDate': PropertySchema(
+      id: 6,
+      name: r'startDate',
       type: IsarType.string,
     )
   },
@@ -63,11 +73,10 @@ int _workHistoryEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  bytesCount += 3 + object.factAgentId.length * 3;
+  bytesCount += 3 + object.endDate.length * 3;
   bytesCount += 3 + object.factSite.length * 3;
   bytesCount += 3 + object.fakeSite.length * 3;
-  bytesCount += 3 + object.month.length * 3;
-  bytesCount += 3 + object.year.length * 3;
+  bytesCount += 3 + object.startDate.length * 3;
   return bytesCount;
 }
 
@@ -77,11 +86,13 @@ void _workHistorySerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeString(offsets[0], object.factAgentId);
-  writer.writeString(offsets[1], object.factSite);
-  writer.writeString(offsets[2], object.fakeSite);
-  writer.writeString(offsets[3], object.month);
-  writer.writeString(offsets[4], object.year);
+  writer.writeString(offsets[0], object.endDate);
+  writer.writeLong(offsets[1], object.factAgentId);
+  writer.writeLong(offsets[2], object.factFake);
+  writer.writeString(offsets[3], object.factSite);
+  writer.writeLong(offsets[4], object.fakeAgentId);
+  writer.writeString(offsets[5], object.fakeSite);
+  writer.writeString(offsets[6], object.startDate);
 }
 
 WorkHistory _workHistoryDeserialize(
@@ -91,12 +102,14 @@ WorkHistory _workHistoryDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = WorkHistory();
-  object.factAgentId = reader.readString(offsets[0]);
-  object.factSite = reader.readString(offsets[1]);
-  object.fakeSite = reader.readString(offsets[2]);
+  object.endDate = reader.readString(offsets[0]);
+  object.factAgentId = reader.readLong(offsets[1]);
+  object.factFake = reader.readLong(offsets[2]);
+  object.factSite = reader.readString(offsets[3]);
+  object.fakeAgentId = reader.readLong(offsets[4]);
+  object.fakeSite = reader.readString(offsets[5]);
   object.id = id;
-  object.month = reader.readString(offsets[3]);
-  object.year = reader.readString(offsets[4]);
+  object.startDate = reader.readString(offsets[6]);
   return object;
 }
 
@@ -110,12 +123,16 @@ P _workHistoryDeserializeProp<P>(
     case 0:
       return (reader.readString(offset)) as P;
     case 1:
-      return (reader.readString(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 2:
-      return (reader.readString(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 3:
       return (reader.readString(offset)) as P;
     case 4:
+      return (reader.readLong(offset)) as P;
+    case 5:
+      return (reader.readString(offset)) as P;
+    case 6:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -215,14 +232,13 @@ extension WorkHistoryQueryWhere
 
 extension WorkHistoryQueryFilter
     on QueryBuilder<WorkHistory, WorkHistory, QFilterCondition> {
-  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition>
-      factAgentIdEqualTo(
+  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition> endDateEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'factAgentId',
+        property: r'endDate',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -230,7 +246,7 @@ extension WorkHistoryQueryFilter
   }
 
   QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition>
-      factAgentIdGreaterThan(
+      endDateGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -238,15 +254,14 @@ extension WorkHistoryQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'factAgentId',
+        property: r'endDate',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition>
-      factAgentIdLessThan(
+  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition> endDateLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -254,15 +269,14 @@ extension WorkHistoryQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'factAgentId',
+        property: r'endDate',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition>
-      factAgentIdBetween(
+  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition> endDateBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -271,7 +285,7 @@ extension WorkHistoryQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'factAgentId',
+        property: r'endDate',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -282,49 +296,50 @@ extension WorkHistoryQueryFilter
   }
 
   QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition>
-      factAgentIdStartsWith(
+      endDateStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'factAgentId',
+        property: r'endDate',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition>
-      factAgentIdEndsWith(
+  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition> endDateEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'factAgentId',
+        property: r'endDate',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition>
-      factAgentIdContains(String value, {bool caseSensitive = true}) {
+  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition> endDateContains(
+      String value,
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
-        property: r'factAgentId',
+        property: r'endDate',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition>
-      factAgentIdMatches(String pattern, {bool caseSensitive = true}) {
+  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition> endDateMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
-        property: r'factAgentId',
+        property: r'endDate',
         wildcard: pattern,
         caseSensitive: caseSensitive,
       ));
@@ -332,21 +347,132 @@ extension WorkHistoryQueryFilter
   }
 
   QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition>
-      factAgentIdIsEmpty() {
+      endDateIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'factAgentId',
+        property: r'endDate',
         value: '',
       ));
     });
   }
 
   QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition>
-      factAgentIdIsNotEmpty() {
+      endDateIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'factAgentId',
+        property: r'endDate',
         value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition>
+      factAgentIdEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'factAgentId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition>
+      factAgentIdGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'factAgentId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition>
+      factAgentIdLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'factAgentId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition>
+      factAgentIdBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'factAgentId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition> factFakeEqualTo(
+      int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'factFake',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition>
+      factFakeGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'factFake',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition>
+      factFakeLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'factFake',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition> factFakeBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'factFake',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
       ));
     });
   }
@@ -482,6 +608,62 @@ extension WorkHistoryQueryFilter
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'factSite',
         value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition>
+      fakeAgentIdEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'fakeAgentId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition>
+      fakeAgentIdGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'fakeAgentId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition>
+      fakeAgentIdLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'fakeAgentId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition>
+      fakeAgentIdBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'fakeAgentId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
       ));
     });
   }
@@ -674,13 +856,14 @@ extension WorkHistoryQueryFilter
     });
   }
 
-  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition> monthEqualTo(
+  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition>
+      startDateEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'month',
+        property: r'startDate',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -688,7 +871,7 @@ extension WorkHistoryQueryFilter
   }
 
   QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition>
-      monthGreaterThan(
+      startDateGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -696,14 +879,15 @@ extension WorkHistoryQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'month',
+        property: r'startDate',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition> monthLessThan(
+  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition>
+      startDateLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -711,14 +895,15 @@ extension WorkHistoryQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'month',
+        property: r'startDate',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition> monthBetween(
+  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition>
+      startDateBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -727,7 +912,7 @@ extension WorkHistoryQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'month',
+        property: r'startDate',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -737,201 +922,71 @@ extension WorkHistoryQueryFilter
     });
   }
 
-  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition> monthStartsWith(
+  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition>
+      startDateStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'month',
+        property: r'startDate',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition> monthEndsWith(
+  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition>
+      startDateEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'month',
+        property: r'startDate',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition> monthContains(
-      String value,
-      {bool caseSensitive = true}) {
+  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition>
+      startDateContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
-        property: r'month',
+        property: r'startDate',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition> monthMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
+  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition>
+      startDateMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
-        property: r'month',
+        property: r'startDate',
         wildcard: pattern,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition> monthIsEmpty() {
+  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition>
+      startDateIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'month',
+        property: r'startDate',
         value: '',
       ));
     });
   }
 
   QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition>
-      monthIsNotEmpty() {
+      startDateIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'month',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition> yearEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'year',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition> yearGreaterThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'year',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition> yearLessThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'year',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition> yearBetween(
-    String lower,
-    String upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'year',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition> yearStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'year',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition> yearEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'year',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition> yearContains(
-      String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'year',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition> yearMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'year',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition> yearIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'year',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition>
-      yearIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'year',
+        property: r'startDate',
         value: '',
       ));
     });
@@ -946,6 +1001,18 @@ extension WorkHistoryQueryLinks
 
 extension WorkHistoryQuerySortBy
     on QueryBuilder<WorkHistory, WorkHistory, QSortBy> {
+  QueryBuilder<WorkHistory, WorkHistory, QAfterSortBy> sortByEndDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'endDate', Sort.asc);
+    });
+  }
+
+  QueryBuilder<WorkHistory, WorkHistory, QAfterSortBy> sortByEndDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'endDate', Sort.desc);
+    });
+  }
+
   QueryBuilder<WorkHistory, WorkHistory, QAfterSortBy> sortByFactAgentId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'factAgentId', Sort.asc);
@@ -955,6 +1022,18 @@ extension WorkHistoryQuerySortBy
   QueryBuilder<WorkHistory, WorkHistory, QAfterSortBy> sortByFactAgentIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'factAgentId', Sort.desc);
+    });
+  }
+
+  QueryBuilder<WorkHistory, WorkHistory, QAfterSortBy> sortByFactFake() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'factFake', Sort.asc);
+    });
+  }
+
+  QueryBuilder<WorkHistory, WorkHistory, QAfterSortBy> sortByFactFakeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'factFake', Sort.desc);
     });
   }
 
@@ -970,6 +1049,18 @@ extension WorkHistoryQuerySortBy
     });
   }
 
+  QueryBuilder<WorkHistory, WorkHistory, QAfterSortBy> sortByFakeAgentId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'fakeAgentId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<WorkHistory, WorkHistory, QAfterSortBy> sortByFakeAgentIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'fakeAgentId', Sort.desc);
+    });
+  }
+
   QueryBuilder<WorkHistory, WorkHistory, QAfterSortBy> sortByFakeSite() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'fakeSite', Sort.asc);
@@ -982,33 +1073,33 @@ extension WorkHistoryQuerySortBy
     });
   }
 
-  QueryBuilder<WorkHistory, WorkHistory, QAfterSortBy> sortByMonth() {
+  QueryBuilder<WorkHistory, WorkHistory, QAfterSortBy> sortByStartDate() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'month', Sort.asc);
+      return query.addSortBy(r'startDate', Sort.asc);
     });
   }
 
-  QueryBuilder<WorkHistory, WorkHistory, QAfterSortBy> sortByMonthDesc() {
+  QueryBuilder<WorkHistory, WorkHistory, QAfterSortBy> sortByStartDateDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'month', Sort.desc);
-    });
-  }
-
-  QueryBuilder<WorkHistory, WorkHistory, QAfterSortBy> sortByYear() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'year', Sort.asc);
-    });
-  }
-
-  QueryBuilder<WorkHistory, WorkHistory, QAfterSortBy> sortByYearDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'year', Sort.desc);
+      return query.addSortBy(r'startDate', Sort.desc);
     });
   }
 }
 
 extension WorkHistoryQuerySortThenBy
     on QueryBuilder<WorkHistory, WorkHistory, QSortThenBy> {
+  QueryBuilder<WorkHistory, WorkHistory, QAfterSortBy> thenByEndDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'endDate', Sort.asc);
+    });
+  }
+
+  QueryBuilder<WorkHistory, WorkHistory, QAfterSortBy> thenByEndDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'endDate', Sort.desc);
+    });
+  }
+
   QueryBuilder<WorkHistory, WorkHistory, QAfterSortBy> thenByFactAgentId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'factAgentId', Sort.asc);
@@ -1021,6 +1112,18 @@ extension WorkHistoryQuerySortThenBy
     });
   }
 
+  QueryBuilder<WorkHistory, WorkHistory, QAfterSortBy> thenByFactFake() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'factFake', Sort.asc);
+    });
+  }
+
+  QueryBuilder<WorkHistory, WorkHistory, QAfterSortBy> thenByFactFakeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'factFake', Sort.desc);
+    });
+  }
+
   QueryBuilder<WorkHistory, WorkHistory, QAfterSortBy> thenByFactSite() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'factSite', Sort.asc);
@@ -1030,6 +1133,18 @@ extension WorkHistoryQuerySortThenBy
   QueryBuilder<WorkHistory, WorkHistory, QAfterSortBy> thenByFactSiteDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'factSite', Sort.desc);
+    });
+  }
+
+  QueryBuilder<WorkHistory, WorkHistory, QAfterSortBy> thenByFakeAgentId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'fakeAgentId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<WorkHistory, WorkHistory, QAfterSortBy> thenByFakeAgentIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'fakeAgentId', Sort.desc);
     });
   }
 
@@ -1057,37 +1172,37 @@ extension WorkHistoryQuerySortThenBy
     });
   }
 
-  QueryBuilder<WorkHistory, WorkHistory, QAfterSortBy> thenByMonth() {
+  QueryBuilder<WorkHistory, WorkHistory, QAfterSortBy> thenByStartDate() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'month', Sort.asc);
+      return query.addSortBy(r'startDate', Sort.asc);
     });
   }
 
-  QueryBuilder<WorkHistory, WorkHistory, QAfterSortBy> thenByMonthDesc() {
+  QueryBuilder<WorkHistory, WorkHistory, QAfterSortBy> thenByStartDateDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'month', Sort.desc);
-    });
-  }
-
-  QueryBuilder<WorkHistory, WorkHistory, QAfterSortBy> thenByYear() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'year', Sort.asc);
-    });
-  }
-
-  QueryBuilder<WorkHistory, WorkHistory, QAfterSortBy> thenByYearDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'year', Sort.desc);
+      return query.addSortBy(r'startDate', Sort.desc);
     });
   }
 }
 
 extension WorkHistoryQueryWhereDistinct
     on QueryBuilder<WorkHistory, WorkHistory, QDistinct> {
-  QueryBuilder<WorkHistory, WorkHistory, QDistinct> distinctByFactAgentId(
+  QueryBuilder<WorkHistory, WorkHistory, QDistinct> distinctByEndDate(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'factAgentId', caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'endDate', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<WorkHistory, WorkHistory, QDistinct> distinctByFactAgentId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'factAgentId');
+    });
+  }
+
+  QueryBuilder<WorkHistory, WorkHistory, QDistinct> distinctByFactFake() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'factFake');
     });
   }
 
@@ -1098,6 +1213,12 @@ extension WorkHistoryQueryWhereDistinct
     });
   }
 
+  QueryBuilder<WorkHistory, WorkHistory, QDistinct> distinctByFakeAgentId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'fakeAgentId');
+    });
+  }
+
   QueryBuilder<WorkHistory, WorkHistory, QDistinct> distinctByFakeSite(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1105,17 +1226,10 @@ extension WorkHistoryQueryWhereDistinct
     });
   }
 
-  QueryBuilder<WorkHistory, WorkHistory, QDistinct> distinctByMonth(
+  QueryBuilder<WorkHistory, WorkHistory, QDistinct> distinctByStartDate(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'month', caseSensitive: caseSensitive);
-    });
-  }
-
-  QueryBuilder<WorkHistory, WorkHistory, QDistinct> distinctByYear(
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'year', caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'startDate', caseSensitive: caseSensitive);
     });
   }
 }
@@ -1128,9 +1242,21 @@ extension WorkHistoryQueryProperty
     });
   }
 
-  QueryBuilder<WorkHistory, String, QQueryOperations> factAgentIdProperty() {
+  QueryBuilder<WorkHistory, String, QQueryOperations> endDateProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'endDate');
+    });
+  }
+
+  QueryBuilder<WorkHistory, int, QQueryOperations> factAgentIdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'factAgentId');
+    });
+  }
+
+  QueryBuilder<WorkHistory, int, QQueryOperations> factFakeProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'factFake');
     });
   }
 
@@ -1140,21 +1266,21 @@ extension WorkHistoryQueryProperty
     });
   }
 
+  QueryBuilder<WorkHistory, int, QQueryOperations> fakeAgentIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'fakeAgentId');
+    });
+  }
+
   QueryBuilder<WorkHistory, String, QQueryOperations> fakeSiteProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'fakeSite');
     });
   }
 
-  QueryBuilder<WorkHistory, String, QQueryOperations> monthProperty() {
+  QueryBuilder<WorkHistory, String, QQueryOperations> startDateProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'month');
-    });
-  }
-
-  QueryBuilder<WorkHistory, String, QQueryOperations> yearProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'year');
+      return query.addPropertyName(r'startDate');
     });
   }
 }

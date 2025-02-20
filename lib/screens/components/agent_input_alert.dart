@@ -45,32 +45,41 @@ class _AgentInputAlertState extends ConsumerState<AgentInputAlert> {
         padding: const EdgeInsets.symmetric(horizontal: 20),
         width: double.infinity,
         height: double.infinity,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            const SizedBox(height: 20),
-            Container(width: context.screenSize.width),
-            const Text('エージェント名登録'),
-            Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
-            _displayInputParts(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Container(),
-                if (_agentId != 0)
-                  TextButton(
-                    onPressed: _editAgentName,
-                    child: const Text('エージェント名を更新する', style: TextStyle(fontSize: 12)),
-                  )
-                else
-                  TextButton(
-                    onPressed: _inputAgentName,
-                    child: const Text('エージェント名を追加する', style: TextStyle(fontSize: 12)),
-                  ),
-              ],
-            ),
-            Expanded(child: displayAgentNameList()),
-          ],
+        child: DefaultTextStyle(
+          style: const TextStyle(fontSize: 12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              const SizedBox(height: 20),
+              Container(width: context.screenSize.width),
+              const Text('エージェント名登録'),
+              Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
+              _displayInputParts(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Container(),
+                  if (_agentId != 0)
+                    TextButton(
+                      onPressed: _editAgentName,
+                      child: const Text(
+                        'エージェント名を更新する',
+                        style: TextStyle(fontSize: 12),
+                      ),
+                    )
+                  else
+                    TextButton(
+                      onPressed: _inputAgentName,
+                      child: const Text(
+                        'エージェント名を追加する',
+                        style: TextStyle(fontSize: 12),
+                      ),
+                    ),
+                ],
+              ),
+              Expanded(child: displayAgentNameList()),
+            ],
+          ),
         ),
       ),
     );
@@ -180,9 +189,7 @@ class _AgentInputAlertState extends ConsumerState<AgentInputAlert> {
       ));
     });
 
-    return SingleChildScrollView(
-      child: DefaultTextStyle(style: const TextStyle(fontSize: 12), child: Column(children: list)),
-    );
+    return SingleChildScrollView(child: Column(children: list));
   }
 
   ///
@@ -218,7 +225,7 @@ class _AgentInputAlertState extends ConsumerState<AgentInputAlert> {
 
     await widget.isar.writeTxn(() async {
       await AgentRepository().getAgent(isar: widget.isar, id: _agentId).then((Agent? value) async {
-        value!..name = _agentNameEditingController.text.trim();
+        value!.name = _agentNameEditingController.text.trim();
 
         await AgentRepository()
             .updateAgent(isar: widget.isar, agent: value)
