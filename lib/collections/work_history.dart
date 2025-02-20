@@ -9,11 +9,8 @@ class WorkHistory {
   late String startDate;
   late String endDate;
 
-  late String factSite;
-  late int factAgentId;
-
-  late String fakeSite;
-  late int fakeAgentId;
+  late String site;
+  late int agentId;
 
   late int factFake;
 }

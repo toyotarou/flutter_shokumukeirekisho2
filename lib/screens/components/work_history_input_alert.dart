@@ -5,8 +5,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
 
 import '../../collections/agent.dart';
+import '../../collections/work_history.dart';
 import '../../extensions/extensions.dart';
 import '../../repository/agent_repository.dart';
+import '../../repository/work_histories_repository.dart';
+import 'parts/error_dialog.dart';
 
 class WorkHistoryInputAlert extends ConsumerStatefulWidget {
   const WorkHistoryInputAlert({super.key, required this.ymStart, required this.isar});
@@ -175,6 +178,8 @@ class _WorkHistoryInputAlertState extends ConsumerState<WorkHistoryInputAlert> {
 
   ///
   Future<void> _makeAgentList() async {
+    agentList = <Agent>[];
+
     await AgentRepository().getAgentList(isar: widget.isar).then((List<Agent>? value) {
       if (mounted) {
         setState(() => agentList = value);
@@ -183,10 +188,48 @@ class _WorkHistoryInputAlertState extends ConsumerState<WorkHistoryInputAlert> {
   }
 
   ///
-  Future<void> _inputWorkHistory() async {}
+  Future<void> _inputWorkHistory() async {
+    bool errFlg = false;
+
+    if (_siteNameEditingController.text.trim() == '' || ymEnd == '' || _agentId == 0) {
+      errFlg = true;
+    }
+
+    if (errFlg) {
+      // ignore: always_specify_types
+      Future.delayed(
+        Duration.zero,
+        () => error_dialog(
+            // ignore: use_build_context_synchronously
+            context: context,
+            title: '登録できません。',
+            content: '値を正しく入力してください。'),
+      );
+
+      return;
+    }
+
+    final WorkHistory workHistory = WorkHistory()
+      ..startDate = widget.ymStart
+      ..endDate = ymEnd
+      ..site = _siteNameEditingController.text.trim()
+      ..agentId = _agentId
+      ..factFake = factFake;
+
+    await WorkHistoriesRepository().inputWorkHistory(isar: widget.isar, workHistory: workHistory).then(
+      // ignore: always_specify_types
+      (value) {
+        _siteNameEditingController.clear();
+
+        if (mounted) {
+          Navigator.pop(context);
+        }
+      },
+    );
+  }
 
   ///
-  Future<void> _deleteWorkHistory() async{}
+  Future<void> _deleteWorkHistory() async {}
 
   ///
   Future<void> _showDP() async {
@@ -219,4 +262,7 @@ class _WorkHistoryInputAlertState extends ConsumerState<WorkHistoryInputAlert> {
       setState(() => ymEnd = selectedDate.yyyymm);
     }
   }
+
+  ///
+  void makeTotalWorkHistoryMap() {}
 }
