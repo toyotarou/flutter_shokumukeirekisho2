@@ -22,23 +22,18 @@ const WorkHistorySchema = CollectionSchema(
       name: r'agentId',
       type: IsarType.long,
     ),
-    r'endDate': PropertySchema(
-      id: 1,
-      name: r'endDate',
-      type: IsarType.string,
-    ),
     r'factFake': PropertySchema(
-      id: 2,
+      id: 1,
       name: r'factFake',
       type: IsarType.long,
     ),
     r'site': PropertySchema(
-      id: 3,
+      id: 2,
       name: r'site',
       type: IsarType.string,
     ),
     r'startDate': PropertySchema(
-      id: 4,
+      id: 3,
       name: r'startDate',
       type: IsarType.string,
     )
@@ -63,7 +58,6 @@ int _workHistoryEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  bytesCount += 3 + object.endDate.length * 3;
   bytesCount += 3 + object.site.length * 3;
   bytesCount += 3 + object.startDate.length * 3;
   return bytesCount;
@@ -76,10 +70,9 @@ void _workHistorySerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeLong(offsets[0], object.agentId);
-  writer.writeString(offsets[1], object.endDate);
-  writer.writeLong(offsets[2], object.factFake);
-  writer.writeString(offsets[3], object.site);
-  writer.writeString(offsets[4], object.startDate);
+  writer.writeLong(offsets[1], object.factFake);
+  writer.writeString(offsets[2], object.site);
+  writer.writeString(offsets[3], object.startDate);
 }
 
 WorkHistory _workHistoryDeserialize(
@@ -90,11 +83,10 @@ WorkHistory _workHistoryDeserialize(
 ) {
   final object = WorkHistory();
   object.agentId = reader.readLong(offsets[0]);
-  object.endDate = reader.readString(offsets[1]);
-  object.factFake = reader.readLong(offsets[2]);
+  object.factFake = reader.readLong(offsets[1]);
   object.id = id;
-  object.site = reader.readString(offsets[3]);
-  object.startDate = reader.readString(offsets[4]);
+  object.site = reader.readString(offsets[2]);
+  object.startDate = reader.readString(offsets[3]);
   return object;
 }
 
@@ -108,12 +100,10 @@ P _workHistoryDeserializeProp<P>(
     case 0:
       return (reader.readLong(offset)) as P;
     case 1:
-      return (reader.readString(offset)) as P;
-    case 2:
       return (reader.readLong(offset)) as P;
-    case 3:
+    case 2:
       return (reader.readString(offset)) as P;
-    case 4:
+    case 3:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -263,140 +253,6 @@ extension WorkHistoryQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition> endDateEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'endDate',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition>
-      endDateGreaterThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'endDate',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition> endDateLessThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'endDate',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition> endDateBetween(
-    String lower,
-    String upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'endDate',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition>
-      endDateStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'endDate',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition> endDateEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'endDate',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition> endDateContains(
-      String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'endDate',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition> endDateMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'endDate',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition>
-      endDateIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'endDate',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<WorkHistory, WorkHistory, QAfterFilterCondition>
-      endDateIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'endDate',
-        value: '',
       ));
     });
   }
@@ -797,18 +653,6 @@ extension WorkHistoryQuerySortBy
     });
   }
 
-  QueryBuilder<WorkHistory, WorkHistory, QAfterSortBy> sortByEndDate() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'endDate', Sort.asc);
-    });
-  }
-
-  QueryBuilder<WorkHistory, WorkHistory, QAfterSortBy> sortByEndDateDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'endDate', Sort.desc);
-    });
-  }
-
   QueryBuilder<WorkHistory, WorkHistory, QAfterSortBy> sortByFactFake() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'factFake', Sort.asc);
@@ -857,18 +701,6 @@ extension WorkHistoryQuerySortThenBy
   QueryBuilder<WorkHistory, WorkHistory, QAfterSortBy> thenByAgentIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'agentId', Sort.desc);
-    });
-  }
-
-  QueryBuilder<WorkHistory, WorkHistory, QAfterSortBy> thenByEndDate() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'endDate', Sort.asc);
-    });
-  }
-
-  QueryBuilder<WorkHistory, WorkHistory, QAfterSortBy> thenByEndDateDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'endDate', Sort.desc);
     });
   }
 
@@ -929,13 +761,6 @@ extension WorkHistoryQueryWhereDistinct
     });
   }
 
-  QueryBuilder<WorkHistory, WorkHistory, QDistinct> distinctByEndDate(
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'endDate', caseSensitive: caseSensitive);
-    });
-  }
-
   QueryBuilder<WorkHistory, WorkHistory, QDistinct> distinctByFactFake() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'factFake');
@@ -968,12 +793,6 @@ extension WorkHistoryQueryProperty
   QueryBuilder<WorkHistory, int, QQueryOperations> agentIdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'agentId');
-    });
-  }
-
-  QueryBuilder<WorkHistory, String, QQueryOperations> endDateProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'endDate');
     });
   }
 

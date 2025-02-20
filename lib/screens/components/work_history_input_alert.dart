@@ -9,6 +9,7 @@ import '../../collections/work_history.dart';
 import '../../extensions/extensions.dart';
 import '../../repository/agent_repository.dart';
 import '../../repository/work_histories_repository.dart';
+import '../home_screen.dart';
 import 'parts/error_dialog.dart';
 
 class WorkHistoryInputAlert extends ConsumerStatefulWidget {
@@ -26,8 +27,6 @@ class _WorkHistoryInputAlertState extends ConsumerState<WorkHistoryInputAlert> {
   List<Agent>? agentList = <Agent>[];
 
   final TextEditingController _siteNameEditingController = TextEditingController();
-
-  String ymEnd = '';
 
   int _agentId = 0;
 
@@ -151,22 +150,11 @@ class _WorkHistoryInputAlertState extends ConsumerState<WorkHistoryInputAlert> {
                   onTapOutside: (PointerDownEvent event) => FocusManager.instance.primaryFocus?.unfocus(),
                 ),
                 const SizedBox(height: 10),
-                Row(
-                  children: <Widget>[
-                    const SizedBox(width: 40, child: Text('end')),
-                    GestureDetector(onTap: () => _showDP(), child: const Icon(Icons.calendar_month)),
-                    const SizedBox(width: 10),
-                    Expanded(child: Text(ymEnd)),
-                    SizedBox(
-                      width: 40,
-                      child: GestureDetector(
-                        onTap: () => setState(() => factFake = (factFake == 0) ? 1 : 0),
-                        child: (factFake == 0)
-                            ? const Text('fact', style: TextStyle(color: Colors.yellowAccent))
-                            : const Text('fake', style: TextStyle(color: Colors.redAccent)),
-                      ),
-                    ),
-                  ],
+                GestureDetector(
+                  onTap: () => setState(() => factFake = (factFake == 0) ? 1 : 0),
+                  child: (factFake == 0)
+                      ? const Text('fact', style: TextStyle(color: Colors.yellowAccent))
+                      : const Text('fake', style: TextStyle(color: Colors.redAccent)),
                 ),
               ],
             ),
@@ -191,7 +179,7 @@ class _WorkHistoryInputAlertState extends ConsumerState<WorkHistoryInputAlert> {
   Future<void> _inputWorkHistory() async {
     bool errFlg = false;
 
-    if (_siteNameEditingController.text.trim() == '' || ymEnd == '' || _agentId == 0) {
+    if (_siteNameEditingController.text.trim() == '') {
       errFlg = true;
     }
 
@@ -211,7 +199,6 @@ class _WorkHistoryInputAlertState extends ConsumerState<WorkHistoryInputAlert> {
 
     final WorkHistory workHistory = WorkHistory()
       ..startDate = widget.ymStart
-      ..endDate = ymEnd
       ..site = _siteNameEditingController.text.trim()
       ..agentId = _agentId
       ..factFake = factFake;
@@ -223,6 +210,8 @@ class _WorkHistoryInputAlertState extends ConsumerState<WorkHistoryInputAlert> {
 
         if (mounted) {
           Navigator.pop(context);
+
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen(isar: widget.isar)));
         }
       },
     );
@@ -230,39 +219,4 @@ class _WorkHistoryInputAlertState extends ConsumerState<WorkHistoryInputAlert> {
 
   ///
   Future<void> _deleteWorkHistory() async {}
-
-  ///
-  Future<void> _showDP() async {
-    final DateTime? selectedDate = await showDatePicker(
-      barrierColor: Colors.transparent,
-      locale: const Locale('ja'),
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(1999),
-      lastDate: DateTime.now().add(const Duration(days: 360)),
-      builder: (BuildContext context, Widget? child) {
-        return Theme(
-          data: ThemeData.dark().copyWith(
-            scaffoldBackgroundColor: Colors.black.withOpacity(0.1),
-            canvasColor: Colors.black.withOpacity(0.1),
-            cardColor: Colors.black.withOpacity(0.1),
-            dividerColor: Colors.indigo,
-            primaryColor: Colors.black.withOpacity(0.1),
-            secondaryHeaderColor: Colors.black.withOpacity(0.1),
-            dialogBackgroundColor: Colors.black.withOpacity(0.1),
-            primaryColorDark: Colors.black.withOpacity(0.1),
-            highlightColor: Colors.black.withOpacity(0.1),
-          ),
-          child: child!,
-        );
-      },
-    );
-
-    if (selectedDate != null) {
-      setState(() => ymEnd = selectedDate.yyyymm);
-    }
-  }
-
-  ///
-  void makeTotalWorkHistoryMap() {}
 }

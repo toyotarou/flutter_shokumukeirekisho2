@@ -2,6 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:isar/isar.dart';
+
+import '../../home_screen.dart';
 
 Future<void> WorkHistoryDialog({
   required BuildContext context,
@@ -11,9 +14,8 @@ Future<void> WorkHistoryDialog({
   double paddingBottom = 0,
   double paddingLeft = 0,
   bool clearBarrierColor = false,
-  bool? executeFunctionWhenDialogClose,
-  WidgetRef? ref,
-  String? from,
+
+
 }) {
   // ignore: inference_failure_on_function_invocation
   return showDialog(
@@ -31,5 +33,8 @@ Future<void> WorkHistoryDialog({
       );
     },
     // ignore: always_specify_types
-  ).then((value) {});
+  ).then((value) {
+
+
+  });
 }

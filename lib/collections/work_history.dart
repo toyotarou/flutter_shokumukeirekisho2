@@ -7,7 +7,6 @@ class WorkHistory {
   Id id = Isar.autoIncrement;
 
   late String startDate;
-  late String endDate;
 
   late String site;
   late int agentId;
