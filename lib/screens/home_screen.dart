@@ -229,7 +229,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
                                           ],
                                         ),
                                         ConstrainedBox(
-                                          constraints: BoxConstraints(minHeight: context.screenSize.height / 10),
+                                          constraints: BoxConstraints(minHeight: context.screenSize.height / 5),
                                           child: (appParamState.factFakeMap[yearmonth] != null)
                                               ? Column(
                                                   children: <Widget>[
