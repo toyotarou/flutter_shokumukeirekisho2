@@ -211,6 +211,7 @@ class _WorkHistoryInputAlertState extends ConsumerState<WorkHistoryInputAlert> {
         if (mounted) {
           Navigator.pop(context);
 
+          // ignore: inference_failure_on_instance_creation, always_specify_types
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen(isar: widget.isar)));
         }
       },

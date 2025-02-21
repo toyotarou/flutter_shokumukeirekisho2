@@ -4,6 +4,7 @@ import 'package:isar/isar.dart';
 
 import '../collections/agent.dart';
 import '../collections/work_history.dart';
+import '../controllers/controllers_mixin.dart';
 import '../extensions/extensions.dart';
 import '../repository/agent_repository.dart';
 import '../repository/work_histories_repository.dart';
@@ -21,7 +22,7 @@ class HomeScreen extends ConsumerStatefulWidget {
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends ConsumerState<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<HomeScreen> {
   int startYear = 1999;
 
   DateTime birthday = DateTime(1973, 8, 19);
@@ -29,11 +30,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   List<GlobalKey> globalKeyList = <GlobalKey<State<StatefulWidget>>>[];
 
   List<WorkHistory>? workHistoryList = <WorkHistory>[];
-  Map<String, WorkHistory>? workHistoryMap = <String, WorkHistory>{};
 
-  Map<String, WorkHistory> totalWorkHistoryMap = <String, WorkHistory>{};
+  Map<String, WorkHistory> workHistoryMapFact = <String, WorkHistory>{};
 
-  Map<int, String> agentMap = {};
+  Map<String, WorkHistory> workHistoryMapFake = <String, WorkHistory>{};
+
+  Map<String, WorkHistory> totalWorkHistoryMapFact = <String, WorkHistory>{};
+
+  Map<String, WorkHistory> totalWorkHistoryMapFake = <String, WorkHistory>{};
+
+  Map<int, String> agentMap = <int, String>{};
 
   ///
   @override
@@ -42,6 +48,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     // ignore: always_specify_types
     globalKeyList = List.generate(100, (int index) => GlobalKey());
+
+    final List<String> ymList = getYearmonthList();
+
+    for (final String element in ymList) {
+      workHistoryMapFact[element] = WorkHistory();
+
+      workHistoryMapFake[element] = WorkHistory();
+    }
 
     makeWorkHistoryList();
 
@@ -186,7 +200,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                             Row(
                                               children: <Widget>[
                                                 GestureDetector(
-                                                  onTap: () {},
+                                                  onTap: () {
+                                                    if (appParamState.factFakeMap[yearmonth] != null) {
+                                                      appParamNotifier.setYearmonthFactFake(
+                                                        yearmonth: yearmonth,
+                                                        flag: !appParamState.factFakeMap[yearmonth]!,
+                                                      );
+                                                    }
+                                                  },
                                                   child: Icon(Icons.compare_arrows_outlined,
                                                       color: Colors.white.withOpacity(0.3)),
                                                 ),
@@ -209,13 +230,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                         ),
                                         ConstrainedBox(
                                           constraints: BoxConstraints(minHeight: context.screenSize.height / 15),
-                                          child: (totalWorkHistoryMap[yearmonth] != null)
+                                          child: (appParamState.factFakeMap[yearmonth] != null)
                                               ? Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: <Widget>[
-                                                    Text(totalWorkHistoryMap[yearmonth]!.site),
-                                                    const SizedBox(height: 5),
-                                                    Text(agentMap[totalWorkHistoryMap[yearmonth]!.agentId] ?? ''),
+                                                    Text(appParamState.factFakeMap[yearmonth].toString()),
+                                                    const Text('-----'),
+                                                    if (totalWorkHistoryMapFact[yearmonth] != null) ...<Widget>[
+                                                      Text(totalWorkHistoryMapFact[yearmonth]!.site),
+                                                      Text(totalWorkHistoryMapFact[yearmonth]!.agentId.toString()),
+                                                    ],
+                                                    const Text('-----'),
+                                                    if (totalWorkHistoryMapFake[yearmonth] != null) ...<Widget>[
+                                                      Text(totalWorkHistoryMapFake[yearmonth]!.site),
+                                                      Text(totalWorkHistoryMapFake[yearmonth]!.agentId.toString()),
+                                                    ],
+                                                    const Text('-----'),
                                                   ],
                                                 )
                                               : Container(),
@@ -276,12 +305,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
           if (value!.isNotEmpty) {
             for (final WorkHistory element in value) {
-              workHistoryMap?[element.startDate] = element;
+              if (element.factFake == 0) {
+                workHistoryMapFact[element.startDate] = element;
+              }
+
+              if (element.factFake == 1) {
+                workHistoryMapFake[element.startDate] = element;
+              }
             }
 
-            if (workHistoryMap != null) {
-              totalWorkHistoryMap = makeTotalWorkHistoryMap(workHistoryMap: workHistoryMap!);
-            }
+            totalWorkHistoryMapFact = makeTotalWorkHistoryMap(data: workHistoryMapFact);
+
+            totalWorkHistoryMapFake = makeTotalWorkHistoryMap(data: workHistoryMapFake);
           }
         });
       }

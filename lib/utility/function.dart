@@ -1,32 +1,39 @@
 import '../collections/work_history.dart';
 import '../extensions/extensions.dart';
 
-Map<String, WorkHistory> makeTotalWorkHistoryMap({required Map<String, WorkHistory> workHistoryMap}) {
-  final Map<String, WorkHistory> result = <String, WorkHistory>{};
-
+List<String> getYearmonthList() {
   final DateTime listStartDate = DateTime(1999, 10);
 
   final int diff = DateTime.now().difference(listStartDate).inDays;
 
   final List<String> ymList = <String>[];
 
-  WorkHistory workHistory = WorkHistory();
-
   for (int i = 0; i < diff; i++) {
     final DateTime date = listStartDate.add(Duration(days: i));
 
-    final String month = date.yyyymm;
+    final String yearmonth = date.yyyymm;
 
-    if (workHistoryMap[month] != null) {
-      workHistory = workHistoryMap[month]!;
-    }
-
-    if (!ymList.contains(month)) {
-      ymList.add(month);
-
-      result[month] = workHistory;
+    if (!ymList.contains(yearmonth)) {
+      ymList.add(yearmonth);
     }
   }
+
+  return ymList;
+}
+
+///
+Map<String, WorkHistory> makeTotalWorkHistoryMap({required Map<String, WorkHistory> data}) {
+  final Map<String, WorkHistory> result = <String, WorkHistory>{};
+
+  WorkHistory workHistory = WorkHistory();
+
+  data.forEach((String key, WorkHistory value) {
+    if (value.startDate != '') {
+      workHistory = value;
+    }
+
+    result[key] = workHistory;
+  });
 
   return result;
 }
