@@ -6,6 +6,7 @@ import 'package:isar/isar.dart';
 
 import '../../collections/agent.dart';
 import '../../collections/work_history.dart';
+import '../../controllers/controllers_mixin.dart';
 import '../../extensions/extensions.dart';
 import '../../repository/agent_repository.dart';
 import '../../repository/work_histories_repository.dart';
@@ -23,14 +24,13 @@ class WorkHistoryInputAlert extends ConsumerStatefulWidget {
   ConsumerState<WorkHistoryInputAlert> createState() => _WorkHistoryInputAlertState();
 }
 
-class _WorkHistoryInputAlertState extends ConsumerState<WorkHistoryInputAlert> {
+class _WorkHistoryInputAlertState extends ConsumerState<WorkHistoryInputAlert>
+    with ControllersMixin<WorkHistoryInputAlert> {
   List<Agent>? agentList = <Agent>[];
 
   final TextEditingController _siteNameEditingController = TextEditingController();
 
   int _agentId = 0;
-
-  int factFake = 0;
 
   ///
   @override
@@ -73,10 +73,13 @@ class _WorkHistoryInputAlertState extends ConsumerState<WorkHistoryInputAlert> {
                         onPressed: _inputWorkHistory,
                         child: const Text('職歴を追加する', style: TextStyle(fontSize: 12)),
                       ),
-                      TextButton(
-                        onPressed: _deleteWorkHistory,
-                        child: const Text('職歴を削除する', style: TextStyle(fontSize: 12)),
-                      ),
+                      // TextButton(
+                      //   onPressed: _deleteWorkHistory,
+                      //   child: const Text('職歴を削除する', style: TextStyle(fontSize: 12)),
+                      // ),
+                      //
+                      //
+                      //
                     ],
                   ),
                 ],
@@ -150,12 +153,9 @@ class _WorkHistoryInputAlertState extends ConsumerState<WorkHistoryInputAlert> {
                   onTapOutside: (PointerDownEvent event) => FocusManager.instance.primaryFocus?.unfocus(),
                 ),
                 const SizedBox(height: 10),
-                GestureDetector(
-                  onTap: () => setState(() => factFake = (factFake == 0) ? 1 : 0),
-                  child: (factFake == 0)
-                      ? const Text('fact', style: TextStyle(color: Colors.yellowAccent))
-                      : const Text('fake', style: TextStyle(color: Colors.redAccent)),
-                ),
+
+                // ignore: use_if_null_to_convert_nulls_to_bools
+                Text((appParamState.factFakeMap[widget.ymStart] == true) ? 'fact' : 'fake'),
               ],
             ),
           ),
@@ -201,7 +201,8 @@ class _WorkHistoryInputAlertState extends ConsumerState<WorkHistoryInputAlert> {
       ..startDate = widget.ymStart
       ..site = _siteNameEditingController.text.trim()
       ..agentId = _agentId
-      ..factFake = factFake;
+      // ignore: use_if_null_to_convert_nulls_to_bools
+      ..factFake = (appParamState.factFakeMap[widget.ymStart] == true) ? 0 : 1;
 
     await WorkHistoriesRepository().inputWorkHistory(isar: widget.isar, workHistory: workHistory).then(
       // ignore: always_specify_types
@@ -218,6 +219,9 @@ class _WorkHistoryInputAlertState extends ConsumerState<WorkHistoryInputAlert> {
     );
   }
 
-  ///
-  Future<void> _deleteWorkHistory() async {}
+// ///
+// Future<void> _deleteWorkHistory() async {}
+//
+//
+//
 }

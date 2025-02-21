@@ -23,17 +23,19 @@ List<String> getYearmonthList() {
 
 ///
 Map<String, WorkHistory> makeTotalWorkHistoryMap({required Map<String, WorkHistory> data}) {
-  final Map<String, WorkHistory> result = <String, WorkHistory>{};
+  final Map<String, WorkHistory> map = <String, WorkHistory>{};
 
-  WorkHistory workHistory = WorkHistory();
+  WorkHistory workHistory = WorkHistory()
+    ..site = ''
+    ..agentId = 0;
 
   data.forEach((String key, WorkHistory value) {
-    if (value.startDate != '') {
+    if (value.site != '') {
       workHistory = value;
     }
 
-    result[key] = workHistory;
+    map[key] = workHistory;
   });
 
-  return result;
+  return map;
 }

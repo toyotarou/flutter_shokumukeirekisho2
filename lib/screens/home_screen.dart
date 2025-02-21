@@ -52,9 +52,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
     final List<String> ymList = getYearmonthList();
 
     for (final String element in ymList) {
-      workHistoryMapFact[element] = WorkHistory();
+      workHistoryMapFact[element] = WorkHistory()..site = '';
 
-      workHistoryMapFake[element] = WorkHistory();
+      workHistoryMapFake[element] = WorkHistory()..site = '';
     }
 
     makeWorkHistoryList();
@@ -232,17 +232,47 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
                                           constraints: BoxConstraints(minHeight: context.screenSize.height / 5),
                                           child: (appParamState.factFakeMap[yearmonth] != null)
                                               ? Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: <Widget>[
                                                     Text(appParamState.factFakeMap[yearmonth].toString()),
                                                     const Text('-----'),
                                                     if (totalWorkHistoryMapFact[yearmonth] != null) ...<Widget>[
-                                                      Text(totalWorkHistoryMapFact[yearmonth]!.site),
-                                                      Text(totalWorkHistoryMapFact[yearmonth]!.agentId.toString()),
+                                                      DefaultTextStyle(
+                                                        style: TextStyle(
+                                                          // ignore: use_if_null_to_convert_nulls_to_bools
+                                                          color: (appParamState.factFakeMap[yearmonth] == true)
+                                                              ? Colors.yellowAccent
+                                                              : Colors.white,
+                                                        ),
+                                                        child: Column(
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: <Widget>[
+                                                            Text(totalWorkHistoryMapFact[yearmonth]!.site),
+                                                            Text(
+                                                              totalWorkHistoryMapFact[yearmonth]!.agentId.toString(),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
                                                     ],
                                                     const Text('-----'),
                                                     if (totalWorkHistoryMapFake[yearmonth] != null) ...<Widget>[
-                                                      Text(totalWorkHistoryMapFake[yearmonth]!.site),
-                                                      Text(totalWorkHistoryMapFake[yearmonth]!.agentId.toString()),
+                                                      DefaultTextStyle(
+                                                        style: TextStyle(
+                                                          color: (appParamState.factFakeMap[yearmonth] == false)
+                                                              ? Colors.yellowAccent
+                                                              : Colors.white,
+                                                        ),
+                                                        child: Column(
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: <Widget>[
+                                                            Text(totalWorkHistoryMapFake[yearmonth]!.site),
+                                                            Text(
+                                                              totalWorkHistoryMapFake[yearmonth]!.agentId.toString(),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
                                                     ],
                                                     const Text('-----'),
                                                   ],
