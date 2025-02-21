@@ -62,3 +62,15 @@ flutter:
 
   assets:
     - assets/images/
+
+flutter_native_splash:
+  image: "assets/images/shokumukeirekisho.png"
+  color: "e898b1"
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/ic_launcher.png"
+
+  adaptive_icon_background: "#e898b1"
+  adaptive_icon_foreground: "assets/images/ic_launcher.png"
