@@ -229,7 +229,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
                                           ],
                                         ),
                                         ConstrainedBox(
-                                          constraints: BoxConstraints(minHeight: context.screenSize.height / 15),
+                                          constraints: BoxConstraints(minHeight: context.screenSize.height / 10),
                                           child: (appParamState.factFakeMap[yearmonth] != null)
                                               ? Column(
                                                   children: <Widget>[
@@ -313,11 +313,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
                 workHistoryMapFake[element.startDate] = element;
               }
             }
-
-            totalWorkHistoryMapFact = makeTotalWorkHistoryMap(data: workHistoryMapFact);
-
-            totalWorkHistoryMapFake = makeTotalWorkHistoryMap(data: workHistoryMapFake);
           }
+
+          totalWorkHistoryMapFact = makeTotalWorkHistoryMap(data: workHistoryMapFact);
+
+          totalWorkHistoryMapFake = makeTotalWorkHistoryMap(data: workHistoryMapFake);
         });
       }
     });
