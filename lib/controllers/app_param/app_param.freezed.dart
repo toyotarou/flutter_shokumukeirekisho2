@@ -17,6 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$AppParamState {
   Map<String, bool> get factFakeMap => throw _privateConstructorUsedError;
+  bool get displayFactData => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $AppParamStateCopyWith<AppParamState> get copyWith =>
@@ -29,7 +30,7 @@ abstract class $AppParamStateCopyWith<$Res> {
           AppParamState value, $Res Function(AppParamState) then) =
       _$AppParamStateCopyWithImpl<$Res, AppParamState>;
   @useResult
-  $Res call({Map<String, bool> factFakeMap});
+  $Res call({Map<String, bool> factFakeMap, bool displayFactData});
 }
 
 /// @nodoc
@@ -46,12 +47,17 @@ class _$AppParamStateCopyWithImpl<$Res, $Val extends AppParamState>
   @override
   $Res call({
     Object? factFakeMap = null,
+    Object? displayFactData = null,
   }) {
     return _then(_value.copyWith(
       factFakeMap: null == factFakeMap
           ? _value.factFakeMap
           : factFakeMap // ignore: cast_nullable_to_non_nullable
               as Map<String, bool>,
+      displayFactData: null == displayFactData
+          ? _value.displayFactData
+          : displayFactData // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -64,7 +70,7 @@ abstract class _$$AppParamStateImplCopyWith<$Res>
       __$$AppParamStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({Map<String, bool> factFakeMap});
+  $Res call({Map<String, bool> factFakeMap, bool displayFactData});
 }
 
 /// @nodoc
@@ -79,12 +85,17 @@ class __$$AppParamStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? factFakeMap = null,
+    Object? displayFactData = null,
   }) {
     return _then(_$AppParamStateImpl(
       factFakeMap: null == factFakeMap
           ? _value._factFakeMap
           : factFakeMap // ignore: cast_nullable_to_non_nullable
               as Map<String, bool>,
+      displayFactData: null == displayFactData
+          ? _value.displayFactData
+          : displayFactData // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -92,7 +103,9 @@ class __$$AppParamStateImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$AppParamStateImpl implements _AppParamState {
-  const _$AppParamStateImpl({final Map<String, bool> factFakeMap = const {}})
+  const _$AppParamStateImpl(
+      {final Map<String, bool> factFakeMap = const <String, bool>{},
+      this.displayFactData = true})
       : _factFakeMap = factFakeMap;
 
   final Map<String, bool> _factFakeMap;
@@ -105,8 +118,12 @@ class _$AppParamStateImpl implements _AppParamState {
   }
 
   @override
+  @JsonKey()
+  final bool displayFactData;
+
+  @override
   String toString() {
-    return 'AppParamState(factFakeMap: $factFakeMap)';
+    return 'AppParamState(factFakeMap: $factFakeMap, displayFactData: $displayFactData)';
   }
 
   @override
@@ -115,12 +132,14 @@ class _$AppParamStateImpl implements _AppParamState {
         (other.runtimeType == runtimeType &&
             other is _$AppParamStateImpl &&
             const DeepCollectionEquality()
-                .equals(other._factFakeMap, _factFakeMap));
+                .equals(other._factFakeMap, _factFakeMap) &&
+            (identical(other.displayFactData, displayFactData) ||
+                other.displayFactData == displayFactData));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, const DeepCollectionEquality().hash(_factFakeMap));
+  int get hashCode => Object.hash(runtimeType,
+      const DeepCollectionEquality().hash(_factFakeMap), displayFactData);
 
   @JsonKey(ignore: true)
   @override
@@ -130,11 +149,14 @@ class _$AppParamStateImpl implements _AppParamState {
 }
 
 abstract class _AppParamState implements AppParamState {
-  const factory _AppParamState({final Map<String, bool> factFakeMap}) =
-      _$AppParamStateImpl;
+  const factory _AppParamState(
+      {final Map<String, bool> factFakeMap,
+      final bool displayFactData}) = _$AppParamStateImpl;
 
   @override
   Map<String, bool> get factFakeMap;
+  @override
+  bool get displayFactData;
   @override
   @JsonKey(ignore: true)
   _$$AppParamStateImplCopyWith<_$AppParamStateImpl> get copyWith =>

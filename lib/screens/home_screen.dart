@@ -67,7 +67,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar(),
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            onPressed: () {
+              appParamNotifier.setDisplayFactData(flag: !appParamState.displayFactData);
+            },
+            icon: Icon(
+              Icons.compare_arrows_outlined,
+              color: (appParamState.displayFactData) ? Colors.white : Colors.yellowAccent,
+            ),
+          ),
+        ],
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
@@ -184,10 +196,35 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
 
                               final String yearmonth = '$element-${(element2 + 1).toString().padLeft(2, '0')}';
 
+                              String siteFact = '';
+                              String agentFact = '';
+                              if (totalWorkHistoryMapFact[yearmonth] != null) {
+                                siteFact = totalWorkHistoryMapFact[yearmonth]!.site;
+                                agentFact = agentMap[totalWorkHistoryMapFact[yearmonth]!.agentId] ?? '';
+                              }
+
+                              String siteFake = '';
+                              const String agentFake = '';
+                              if (totalWorkHistoryMapFake[yearmonth] != null) {
+                                siteFake = totalWorkHistoryMapFake[yearmonth]!.site;
+                              }
+
+                              final String dispSite =
+                                  // ignore: use_if_null_to_convert_nulls_to_bools
+                                  (appParamState.factFakeMap[yearmonth] == true) ? siteFact : siteFake;
+
+                              final String dispAgent =
+                                  // ignore: use_if_null_to_convert_nulls_to_bools
+                                  (appParamState.factFakeMap[yearmonth] == true) ? agentFact : agentFake;
+
+                              final Color factFaceBgcolor = (siteFact != '' && siteFact == siteFake)
+                                  ? Colors.greenAccent.withOpacity(0.1)
+                                  : Colors.white.withOpacity(0.1);
+
                               return Container(
                                 margin: const EdgeInsets.all(2),
                                 padding: const EdgeInsets.all(5),
-                                decoration: BoxDecoration(color: Colors.white.withOpacity(0.1)),
+                                decoration: BoxDecoration(color: factFaceBgcolor),
                                 child: Stack(
                                   children: <Widget>[
                                     Column(
@@ -208,8 +245,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
                                                       );
                                                     }
                                                   },
-                                                  child: Icon(Icons.compare_arrows_outlined,
-                                                      color: Colors.white.withOpacity(0.3)),
+                                                  child: Icon(
+                                                    Icons.compare_arrows_outlined,
+                                                    color: (appParamState.factFakeMap[yearmonth] != null &&
+                                                            appParamState.factFakeMap[yearmonth] == false)
+                                                        ? Colors.yellowAccent.withOpacity(0.8)
+                                                        : Colors.white.withOpacity(0.3),
+                                                  ),
                                                 ),
                                                 const SizedBox(width: 20),
                                                 GestureDetector(
@@ -219,6 +261,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
                                                       widget: WorkHistoryInputAlert(
                                                         isar: widget.isar,
                                                         ymStart: yearmonth,
+                                                        site: dispSite,
+
+                                                        // ignore: use_if_null_to_convert_nulls_to_bools
+                                                        agentId: (appParamState.factFakeMap[yearmonth] == true)
+                                                            ? totalWorkHistoryMapFact[yearmonth]!.agentId
+                                                            : 0,
                                                       ),
                                                     );
                                                   },
@@ -229,52 +277,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
                                           ],
                                         ),
                                         ConstrainedBox(
-                                          constraints: BoxConstraints(minHeight: context.screenSize.height / 5),
+                                          constraints: BoxConstraints(minHeight: context.screenSize.height / 20),
                                           child: (appParamState.factFakeMap[yearmonth] != null)
                                               ? Column(
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: <Widget>[
-                                                    Text(appParamState.factFakeMap[yearmonth].toString()),
-                                                    const Text('-----'),
-                                                    if (totalWorkHistoryMapFact[yearmonth] != null) ...<Widget>[
-                                                      DefaultTextStyle(
-                                                        style: TextStyle(
-                                                          // ignore: use_if_null_to_convert_nulls_to_bools
-                                                          color: (appParamState.factFakeMap[yearmonth] == true)
-                                                              ? Colors.yellowAccent
-                                                              : Colors.white,
-                                                        ),
-                                                        child: Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          children: <Widget>[
-                                                            Text(totalWorkHistoryMapFact[yearmonth]!.site),
-                                                            Text(
-                                                              totalWorkHistoryMapFact[yearmonth]!.agentId.toString(),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                    const Text('-----'),
-                                                    if (totalWorkHistoryMapFake[yearmonth] != null) ...<Widget>[
-                                                      DefaultTextStyle(
-                                                        style: TextStyle(
-                                                          color: (appParamState.factFakeMap[yearmonth] == false)
-                                                              ? Colors.yellowAccent
-                                                              : Colors.white,
-                                                        ),
-                                                        child: Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          children: <Widget>[
-                                                            Text(totalWorkHistoryMapFake[yearmonth]!.site),
-                                                            Text(
-                                                              totalWorkHistoryMapFake[yearmonth]!.agentId.toString(),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                    const Text('-----'),
+                                                    Text(dispSite),
+                                                    Text(dispAgent),
                                                   ],
                                                 )
                                               : Container(),

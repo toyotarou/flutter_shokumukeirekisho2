@@ -12,6 +12,7 @@ part 'app_param.g.dart';
 class AppParamState with _$AppParamState {
   const factory AppParamState({
     @Default(<String, bool>{}) Map<String, bool> factFakeMap,
+    @Default(true) bool displayFactData,
   }) = _AppParamState;
 }
 
@@ -40,5 +41,16 @@ class AppParam extends _$AppParam {
     map[yearmonth] = flag;
 
     state = state.copyWith(factFakeMap: map);
+  }
+
+  ///
+  void setDisplayFactData({required bool flag}) {
+    final Map<String, bool> map = {};
+
+    final Map<String, bool> map2 = <String, bool>{...state.factFakeMap};
+
+    map2.forEach((key, value) => map[key] = flag);
+
+    state = state.copyWith(displayFactData: flag, factFakeMap: map);
   }
 }

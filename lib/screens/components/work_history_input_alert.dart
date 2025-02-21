@@ -14,11 +14,16 @@ import '../home_screen.dart';
 import 'parts/error_dialog.dart';
 
 class WorkHistoryInputAlert extends ConsumerStatefulWidget {
-  const WorkHistoryInputAlert({super.key, required this.ymStart, required this.isar});
+  const WorkHistoryInputAlert(
+      {super.key, required this.ymStart, required this.isar, required this.site, required this.agentId});
 
   final Isar isar;
 
   final String ymStart;
+
+  final String site;
+
+  final int agentId;
 
   @override
   ConsumerState<WorkHistoryInputAlert> createState() => _WorkHistoryInputAlertState();
@@ -73,13 +78,6 @@ class _WorkHistoryInputAlertState extends ConsumerState<WorkHistoryInputAlert>
                         onPressed: _inputWorkHistory,
                         child: const Text('職歴を追加する', style: TextStyle(fontSize: 12)),
                       ),
-                      // TextButton(
-                      //   onPressed: _deleteWorkHistory,
-                      //   child: const Text('職歴を削除する', style: TextStyle(fontSize: 12)),
-                      // ),
-                      //
-                      //
-                      //
                     ],
                   ),
                 ],
@@ -93,6 +91,9 @@ class _WorkHistoryInputAlertState extends ConsumerState<WorkHistoryInputAlert>
 
   ///
   Widget _displayInputParts() {
+    _agentId = widget.agentId;
+    _siteNameEditingController.text = widget.site;
+
     // ignore: strict_raw_type, always_specify_types
     final List<DropdownMenuItem> dropdownMenuItem = [
       // ignore: always_specify_types
