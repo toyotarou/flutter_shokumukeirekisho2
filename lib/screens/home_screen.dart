@@ -10,6 +10,7 @@ import '../repository/agent_repository.dart';
 import '../repository/work_histories_repository.dart';
 import '../utility/function.dart';
 import 'components/agent_input_alert.dart';
+import 'components/csv_data/data_export_alert.dart';
 import 'components/parts/work_history_dialog.dart';
 import 'components/work_history_input_alert.dart';
 
@@ -124,6 +125,28 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
                   child: const Text('エージェント名登録'),
                 ),
               ),
+              Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
+              GestureDetector(
+                onTap: () {
+                  WorkHistoryDialog(context: context, widget: DataExportAlert(isar: widget.isar));
+                },
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
+                  margin: const EdgeInsets.all(5),
+                  child: const Text('データエクスポート'),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {},
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
+                  margin: const EdgeInsets.all(5),
+                  child: const Text('データインポート'),
+                ),
+              ),
+              Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
             ],
           ),
         ),
