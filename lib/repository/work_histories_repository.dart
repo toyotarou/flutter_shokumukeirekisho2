@@ -16,4 +16,8 @@ class WorkHistoriesRepository {
   ///
   Future<void> updateWorkHistory({required Isar isar, required WorkHistory workHistory}) async =>
       isar.workHistorys.put(workHistory);
+
+  ///
+  Future<void> deleteWorkHistory({required Isar isar, required int id}) async =>
+      isar.writeTxn(() async => isar.workHistorys.delete(id));
 }

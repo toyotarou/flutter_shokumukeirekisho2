@@ -45,11 +45,11 @@ class AppParam extends _$AppParam {
 
   ///
   void setDisplayFactData({required bool flag}) {
-    final Map<String, bool> map = {};
+    final Map<String, bool> map = <String, bool>{};
 
     final Map<String, bool> map2 = <String, bool>{...state.factFakeMap};
 
-    map2.forEach((key, value) => map[key] = flag);
+    map2.forEach((String key, bool value) => map[key] = flag);
 
     state = state.copyWith(displayFactData: flag, factFakeMap: map);
   }

@@ -68,7 +68,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        actions: [
+        actions: <Widget>[
+          IconButton(
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                // ignore: inference_failure_on_instance_creation, always_specify_types
+                MaterialPageRoute(builder: (BuildContext context) => HomeScreen(isar: widget.isar)),
+              );
+            },
+            icon: const Icon(Icons.refresh),
+          ),
           IconButton(
             onPressed: () {
               appParamNotifier.setDisplayFactData(flag: !appParamState.displayFactData);
@@ -106,12 +116,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
             children: <Widget>[
               const SizedBox(height: 60),
               GestureDetector(
-                onTap: () {
-                  WorkHistoryDialog(
-                    context: context,
-                    widget: AgentInputAlert(isar: widget.isar),
-                  );
-                },
+                onTap: () => WorkHistoryDialog(context: context, widget: AgentInputAlert(isar: widget.isar)),
                 child: Container(
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
@@ -138,9 +143,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
             return Row(
               children: <Widget>[
                 GestureDetector(
-                  onTap: () {
-                    scrollToIndex(element - startYear);
-                  },
+                  onTap: () => scrollToIndex(element - startYear),
                   child: CircleAvatar(
                     backgroundColor: Colors.blueAccent.withOpacity(0.4),
                     child: Text(
@@ -221,85 +224,99 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
                                   ? Colors.greenAccent.withOpacity(0.1)
                                   : Colors.white.withOpacity(0.1);
 
-                              return Container(
-                                margin: const EdgeInsets.all(2),
-                                padding: const EdgeInsets.all(5),
-                                decoration: BoxDecoration(color: factFaceBgcolor),
-                                child: Stack(
-                                  children: <Widget>[
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                              return Stack(
+                                children: <Widget>[
+                                  Container(
+                                    margin: const EdgeInsets.all(2),
+                                    padding: const EdgeInsets.all(5),
+                                    decoration: BoxDecoration(color: factFaceBgcolor),
+                                    child: Stack(
                                       children: <Widget>[
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: <Widget>[
-                                            Text((element2 + 1).toString().padLeft(2, '0')),
                                             Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               children: <Widget>[
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    if (appParamState.factFakeMap[yearmonth] != null) {
-                                                      appParamNotifier.setYearmonthFactFake(
-                                                        yearmonth: yearmonth,
-                                                        flag: !appParamState.factFakeMap[yearmonth]!,
-                                                      );
-                                                    }
-                                                  },
-                                                  child: Icon(
-                                                    Icons.compare_arrows_outlined,
-                                                    color: (appParamState.factFakeMap[yearmonth] != null &&
-                                                            appParamState.factFakeMap[yearmonth] == false)
-                                                        ? Colors.yellowAccent.withOpacity(0.8)
-                                                        : Colors.white.withOpacity(0.3),
-                                                  ),
-                                                ),
-                                                const SizedBox(width: 20),
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    WorkHistoryDialog(
-                                                      context: context,
-                                                      widget: WorkHistoryInputAlert(
-                                                        isar: widget.isar,
-                                                        ymStart: yearmonth,
-                                                        site: dispSite,
-
-                                                        // ignore: use_if_null_to_convert_nulls_to_bools
-                                                        agentId: (appParamState.factFakeMap[yearmonth] == true)
-                                                            ? totalWorkHistoryMapFact[yearmonth]!.agentId
-                                                            : 0,
+                                                Text((element2 + 1).toString().padLeft(2, '0')),
+                                                Row(
+                                                  children: <Widget>[
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        if (appParamState.factFakeMap[yearmonth] != null) {
+                                                          appParamNotifier.setYearmonthFactFake(
+                                                            yearmonth: yearmonth,
+                                                            flag: !appParamState.factFakeMap[yearmonth]!,
+                                                          );
+                                                        }
+                                                      },
+                                                      child: Icon(
+                                                        Icons.compare_arrows_outlined,
+                                                        color: (appParamState.factFakeMap[yearmonth] != null &&
+                                                                appParamState.factFakeMap[yearmonth] == false)
+                                                            ? Colors.yellowAccent.withOpacity(0.8)
+                                                            : Colors.white.withOpacity(0.3),
                                                       ),
-                                                    );
-                                                  },
-                                                  child: Icon(Icons.input, color: Colors.white.withOpacity(0.3)),
+                                                    ),
+                                                    const SizedBox(width: 20),
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        WorkHistoryDialog(
+                                                          context: context,
+                                                          widget: WorkHistoryInputAlert(
+                                                            isar: widget.isar,
+
+                                                            workHistoryList: workHistoryList,
+
+                                                            ymStart: yearmonth,
+                                                            site: dispSite,
+
+                                                            // ignore: use_if_null_to_convert_nulls_to_bools
+                                                            agentId: (appParamState.factFakeMap[yearmonth] == true)
+                                                                ? totalWorkHistoryMapFact[yearmonth]!.agentId
+                                                                : 0,
+                                                          ),
+                                                        );
+                                                      },
+                                                      child: Icon(Icons.input, color: Colors.white.withOpacity(0.3)),
+                                                    ),
+                                                  ],
                                                 ),
                                               ],
                                             ),
+                                            ConstrainedBox(
+                                              constraints: BoxConstraints(minHeight: context.screenSize.height / 20),
+                                              child: (appParamState.factFakeMap[yearmonth] != null)
+                                                  ? Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: <Widget>[
+                                                        Text(dispSite, maxLines: 1, overflow: TextOverflow.ellipsis),
+                                                        Text(dispAgent, maxLines: 1, overflow: TextOverflow.ellipsis),
+                                                      ],
+                                                    )
+                                                  : Container(),
+                                            ),
                                           ],
                                         ),
-                                        ConstrainedBox(
-                                          constraints: BoxConstraints(minHeight: context.screenSize.height / 20),
-                                          child: (appParamState.factFakeMap[yearmonth] != null)
-                                              ? Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: <Widget>[
-                                                    Text(dispSite),
-                                                    Text(dispAgent),
-                                                  ],
-                                                )
-                                              : Container(),
+                                        Positioned(
+                                          bottom: 0,
+                                          right: 0,
+                                          child: Text(
+                                            age.toString(),
+                                            style: TextStyle(color: Colors.white.withOpacity(0.3)),
+                                          ),
                                         ),
                                       ],
                                     ),
-                                    Positioned(
-                                      bottom: 0,
-                                      right: 0,
-                                      child: Text(
-                                        age.toString(),
-                                        style: TextStyle(color: Colors.white.withOpacity(0.3)),
-                                      ),
+                                  ),
+                                  Positioned(
+                                    bottom: 5,
+                                    child: Text(
+                                      element.toString(),
+                                      style: TextStyle(fontSize: 40,color: Colors.grey.withOpacity(0.1)),
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               );
                             },
                           ).toList(),

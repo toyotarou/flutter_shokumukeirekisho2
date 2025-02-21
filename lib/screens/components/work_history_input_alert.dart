@@ -15,7 +15,12 @@ import 'parts/error_dialog.dart';
 
 class WorkHistoryInputAlert extends ConsumerStatefulWidget {
   const WorkHistoryInputAlert(
-      {super.key, required this.ymStart, required this.isar, required this.site, required this.agentId});
+      {super.key,
+      required this.ymStart,
+      required this.isar,
+      required this.site,
+      required this.agentId,
+      this.workHistoryList});
 
   final Isar isar;
 
@@ -24,6 +29,8 @@ class WorkHistoryInputAlert extends ConsumerStatefulWidget {
   final String site;
 
   final int agentId;
+
+  final List<WorkHistory>? workHistoryList;
 
   @override
   ConsumerState<WorkHistoryInputAlert> createState() => _WorkHistoryInputAlertState();
@@ -77,6 +84,10 @@ class _WorkHistoryInputAlertState extends ConsumerState<WorkHistoryInputAlert>
                       TextButton(
                         onPressed: _inputWorkHistory,
                         child: const Text('職歴を追加する', style: TextStyle(fontSize: 12)),
+                      ),
+                      TextButton(
+                        onPressed: _deleteWorkHistory,
+                        child: const Text('職歴を削除する', style: TextStyle(fontSize: 12)),
                       ),
                     ],
                   ),
@@ -220,9 +231,28 @@ class _WorkHistoryInputAlertState extends ConsumerState<WorkHistoryInputAlert>
     );
   }
 
-// ///
-// Future<void> _deleteWorkHistory() async {}
-//
-//
-//
+  ///
+  Future<void> _deleteWorkHistory() async {
+    final bool? factFake = appParamState.factFakeMap[widget.ymStart];
+
+    // ignore: use_if_null_to_convert_nulls_to_bools
+    final int checkFactFake = (factFake == true) ? 0 : 1;
+
+    WorkHistory? workHistory;
+
+    widget.workHistoryList?.forEach((WorkHistory element) {
+      if (element.startDate == widget.ymStart && element.factFake == checkFactFake) {
+        workHistory = element;
+      }
+    });
+
+    if (workHistory != null) {
+      // ignore: always_specify_types
+      WorkHistoriesRepository().deleteWorkHistory(isar: widget.isar, id: workHistory!.id).then((value) {
+        if (mounted) {
+          Navigator.pop(context);
+        }
+      });
+    }
+  }
 }
