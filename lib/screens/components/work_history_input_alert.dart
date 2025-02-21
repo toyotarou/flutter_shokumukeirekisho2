@@ -44,12 +44,22 @@ class _WorkHistoryInputAlertState extends ConsumerState<WorkHistoryInputAlert>
 
   int _agentId = 0;
 
+  int dataPos = 0;
+
   ///
   @override
   void initState() {
     super.initState();
 
     _makeAgentList();
+
+    if (widget.workHistoryList != null) {
+      dataPos = widget.workHistoryList!.indexWhere((WorkHistory element) => element.startDate == widget.ymStart);
+
+      if (dataPos != -1) {
+        _siteNameEditingController.text = widget.workHistoryList![0].site;
+      }
+    }
   }
 
   ///
@@ -81,14 +91,22 @@ class _WorkHistoryInputAlertState extends ConsumerState<WorkHistoryInputAlert>
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[
-                      TextButton(
-                        onPressed: _inputWorkHistory,
-                        child: const Text('職歴を追加する', style: TextStyle(fontSize: 12)),
-                      ),
-                      TextButton(
-                        onPressed: _deleteWorkHistory,
-                        child: const Text('職歴を削除する', style: TextStyle(fontSize: 12)),
-                      ),
+                      if (dataPos == -1) ...<Widget>[
+                        TextButton(
+                          onPressed: _inputWorkHistory,
+                          child: const Text('職歴を追加する', style: TextStyle(fontSize: 12)),
+                        ),
+                      ],
+                      if (dataPos != -1) ...<Widget>[
+                        TextButton(
+                          onPressed: _updateWorkHistory,
+                          child: const Text('職歴を更新する', style: TextStyle(fontSize: 12)),
+                        ),
+                        TextButton(
+                          onPressed: _showDeleteDialog,
+                          child: const Text('職歴を削除する', style: TextStyle(fontSize: 12)),
+                        ),
+                      ],
                     ],
                   ),
                 ],
@@ -102,9 +120,6 @@ class _WorkHistoryInputAlertState extends ConsumerState<WorkHistoryInputAlert>
 
   ///
   Widget _displayInputParts() {
-    _agentId = widget.agentId;
-    _siteNameEditingController.text = widget.site;
-
     // ignore: strict_raw_type, always_specify_types
     final List<DropdownMenuItem> dropdownMenuItem = [
       // ignore: always_specify_types
@@ -137,7 +152,13 @@ class _WorkHistoryInputAlertState extends ConsumerState<WorkHistoryInputAlert>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(widget.ymStart),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(widget.ymStart),
+                    Text((dataPos == -1) ? 'insert' : 'update'),
+                  ],
+                ),
 
                 // ignore: always_specify_types
                 DropdownButton(
@@ -166,8 +187,27 @@ class _WorkHistoryInputAlertState extends ConsumerState<WorkHistoryInputAlert>
                 ),
                 const SizedBox(height: 10),
 
-                // ignore: use_if_null_to_convert_nulls_to_bools
-                Text((appParamState.factFakeMap[widget.ymStart] == true) ? 'fact' : 'fake'),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      // ignore: use_if_null_to_convert_nulls_to_bools
+                      (appParamState.factFakeMap[widget.ymStart] == true) ? 'fact' : 'fake',
+                      style: TextStyle(
+                        // ignore: use_if_null_to_convert_nulls_to_bools
+                        color: (appParamState.factFakeMap[widget.ymStart] == true) ? Colors.white : Colors.yellowAccent,
+                      ),
+                    ),
+                    IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _agentId = 0;
+                            _siteNameEditingController.clear();
+                          });
+                        },
+                        icon: const Icon(Icons.close)),
+                  ],
+                ),
               ],
             ),
           ),
@@ -232,6 +272,28 @@ class _WorkHistoryInputAlertState extends ConsumerState<WorkHistoryInputAlert>
   }
 
   ///
+  void _showDeleteDialog() {
+    final Widget cancelButton = TextButton(onPressed: () => Navigator.pop(context), child: const Text('いいえ'));
+
+    final Widget continueButton = TextButton(
+        onPressed: () {
+          _deleteWorkHistory();
+
+          Navigator.pop(context);
+        },
+        child: const Text('はい'));
+
+    final AlertDialog alert = AlertDialog(
+      backgroundColor: Colors.blueGrey.withOpacity(0.3),
+      content: const Text('このデータを消去しますか？'),
+      actions: <Widget>[cancelButton, continueButton],
+    );
+
+    // ignore: inference_failure_on_function_invocation
+    showDialog(context: context, builder: (BuildContext context) => alert);
+  }
+
+  ///
   Future<void> _deleteWorkHistory() async {
     final bool? factFake = appParamState.factFakeMap[widget.ymStart];
 
@@ -251,8 +313,52 @@ class _WorkHistoryInputAlertState extends ConsumerState<WorkHistoryInputAlert>
       WorkHistoriesRepository().deleteWorkHistory(isar: widget.isar, id: workHistory!.id).then((value) {
         if (mounted) {
           Navigator.pop(context);
+
+          // ignore: inference_failure_on_instance_creation, always_specify_types
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen(isar: widget.isar)));
         }
       });
     }
+  }
+
+  ///
+  Future<void> _updateWorkHistory() async {
+    bool errFlg = false;
+
+    if (_siteNameEditingController.text.trim() == '') {
+      errFlg = true;
+    }
+
+    if (errFlg) {
+      // ignore: always_specify_types
+      Future.delayed(
+        Duration.zero,
+        () => error_dialog(
+            // ignore: use_build_context_synchronously
+            context: context,
+            title: '登録できません。',
+            content: '値を正しく入力してください。'),
+      );
+
+      return;
+    }
+
+    final WorkHistory workHistory = widget.workHistoryList![dataPos]
+      ..site = _siteNameEditingController.text.trim()
+      ..agentId = _agentId;
+
+    await widget.isar.writeTxn(() async {
+      // ignore: always_specify_types
+      await WorkHistoriesRepository().updateWorkHistory(isar: widget.isar, workHistory: workHistory).then((value) {
+        _siteNameEditingController.clear();
+
+        if (mounted) {
+          Navigator.pop(context);
+
+          // ignore: inference_failure_on_instance_creation, always_specify_types
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen(isar: widget.isar)));
+        }
+      });
+    });
   }
 }

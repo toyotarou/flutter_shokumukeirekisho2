@@ -299,7 +299,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
                                           ],
                                         ),
                                         Positioned(
-                                          bottom: 0,
+                                          bottom: 20,
                                           right: 0,
                                           child: Text(
                                             age.toString(),
@@ -311,9 +311,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
                                   ),
                                   Positioned(
                                     bottom: 5,
+                                    right: 5,
                                     child: Text(
                                       element.toString(),
-                                      style: TextStyle(fontSize: 40,color: Colors.grey.withOpacity(0.1)),
+                                      style: TextStyle(fontSize: 20, color: Colors.grey.withOpacity(0.3)),
                                     ),
                                   ),
                                 ],
