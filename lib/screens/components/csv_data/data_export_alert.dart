@@ -14,7 +14,7 @@ import 'package:share_plus/share_plus.dart';
 import '../../../collections/agent.dart';
 import '../../../collections/work_history.dart';
 import '../../../extensions/extensions.dart';
-import '../../../repository/agent_repository.dart';
+import '../../../repository/agents_repository.dart';
 import '../../../repository/work_histories_repository.dart';
 import '../parts/error_dialog.dart';
 
@@ -160,7 +160,7 @@ class _DataExportAlertState extends ConsumerState<DataExportAlert> {
 
     switch (csvName) {
       case 'agent':
-        await AgentRepository().getAgentList(isar: widget.isar).then((List<Agent>? value) {
+        await AgentsRepository().getAgentList(isar: widget.isar).then((List<Agent>? value) {
           value?.forEach((Agent element) {
             outputValuesList.add(<String>[element.id.toString(), element.name].join(','));
           });

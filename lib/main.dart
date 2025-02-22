@@ -9,6 +9,7 @@ import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'collections/agent.dart';
+import 'collections/note.dart';
 import 'collections/work_history.dart';
 import 'screens/home_screen.dart';
 
@@ -21,6 +22,7 @@ void main() async {
   final Isar isar = await Isar.open([
     WorkHistorySchema,
     AgentSchema,
+    NoteSchema,
   ], directory: dir.path);
 
   await SystemChrome.setPreferredOrientations(

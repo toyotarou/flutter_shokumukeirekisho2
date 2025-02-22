@@ -3,7 +3,7 @@ import 'package:isar/isar.dart';
 
 import '../../collections/agent.dart';
 import '../../extensions/extensions.dart';
-import '../../repository/agent_repository.dart';
+import '../../repository/agents_repository.dart';
 
 class AgentSelectSettingAlert extends StatefulWidget {
   const AgentSelectSettingAlert({super.key, required this.isar});
@@ -88,7 +88,7 @@ class _AgentSelectSettingAlertState extends State<AgentSelectSettingAlert> {
   Future<void> makeAgentList() async {
     agentList = [];
 
-    await AgentRepository().getAgentList(isar: widget.isar).then((List<Agent>? value) {
+    await AgentsRepository().getAgentList(isar: widget.isar).then((List<Agent>? value) {
       if (mounted) {
         setState(() => agentList = value);
       }

@@ -2,7 +2,7 @@ import 'package:isar/isar.dart';
 
 import '../collections/agent.dart';
 
-class AgentRepository {
+class AgentsRepository {
   ///
   Future<Agent?> getAgent({required Isar isar, required int id}) async => isar.agents.get(id);
 

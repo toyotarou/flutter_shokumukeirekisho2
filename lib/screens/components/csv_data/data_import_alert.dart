@@ -8,7 +8,7 @@ import 'package:isar/isar.dart';
 import '../../../collections/agent.dart';
 import '../../../collections/work_history.dart';
 import '../../../extensions/extensions.dart';
-import '../../../repository/agent_repository.dart';
+import '../../../repository/agents_repository.dart';
 import '../../../repository/work_histories_repository.dart';
 import '../parts/error_dialog.dart';
 
@@ -228,7 +228,7 @@ class _DataImportAlertState extends State<DataImportAlert> {
 
     switch (csvName) {
       case 'agent':
-        await AgentRepository()
+        await AgentsRepository()
             .inputAgentList(isar: widget.isar, agentList: importDataList as List<Agent>)
             // ignore: always_specify_types
             .then((value) {

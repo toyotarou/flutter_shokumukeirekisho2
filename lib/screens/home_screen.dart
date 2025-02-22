@@ -6,7 +6,7 @@ import '../collections/agent.dart';
 import '../collections/work_history.dart';
 import '../controllers/controllers_mixin.dart';
 import '../extensions/extensions.dart';
-import '../repository/agent_repository.dart';
+import '../repository/agents_repository.dart';
 import '../repository/work_histories_repository.dart';
 import '../utility/function.dart';
 import 'components/agent_input_alert.dart';
@@ -433,7 +433,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
 
   ///
   Future<void> makeAgentMap() async {
-    await AgentRepository().getAgentList(isar: widget.isar).then((List<Agent>? value) {
+    await AgentsRepository().getAgentList(isar: widget.isar).then((List<Agent>? value) {
       if (mounted) {
         setState(() {
           if (value!.isNotEmpty) {

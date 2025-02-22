@@ -6,7 +6,7 @@ import 'package:isar/isar.dart';
 
 import '../../collections/agent.dart';
 import '../../extensions/extensions.dart';
-import '../../repository/agent_repository.dart';
+import '../../repository/agents_repository.dart';
 import 'parts/error_dialog.dart';
 
 class AgentInputAlert extends ConsumerStatefulWidget {
@@ -153,7 +153,7 @@ class _AgentInputAlertState extends ConsumerState<AgentInputAlert> {
 
     final Agent agent = Agent()..name = _agentNameEditingController.text.trim();
 
-    await AgentRepository().inputAgent(isar: widget.isar, agent: agent).then(
+    await AgentsRepository().inputAgent(isar: widget.isar, agent: agent).then(
       // ignore: always_specify_types
       (value) {
         _agentNameEditingController.clear();
@@ -196,7 +196,7 @@ class _AgentInputAlertState extends ConsumerState<AgentInputAlert> {
   Future<void> _makeAgentList() async {
     agentList = [];
 
-    await AgentRepository().getAgentList(isar: widget.isar).then((List<Agent>? value) {
+    await AgentsRepository().getAgentList(isar: widget.isar).then((List<Agent>? value) {
       if (mounted) {
         setState(() => agentList = value);
       }
@@ -226,10 +226,10 @@ class _AgentInputAlertState extends ConsumerState<AgentInputAlert> {
     }
 
     await widget.isar.writeTxn(() async {
-      await AgentRepository().getAgent(isar: widget.isar, id: _agentId).then((Agent? value) async {
+      await AgentsRepository().getAgent(isar: widget.isar, id: _agentId).then((Agent? value) async {
         value!.name = _agentNameEditingController.text.trim();
 
-        await AgentRepository()
+        await AgentsRepository()
             .updateAgent(isar: widget.isar, agent: value)
             // ignore: always_specify_types
             .then((value) {

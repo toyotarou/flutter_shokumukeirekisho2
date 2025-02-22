@@ -8,7 +8,7 @@ import '../../collections/agent.dart';
 import '../../collections/work_history.dart';
 import '../../controllers/controllers_mixin.dart';
 import '../../extensions/extensions.dart';
-import '../../repository/agent_repository.dart';
+import '../../repository/agents_repository.dart';
 import '../../repository/work_histories_repository.dart';
 import '../home_screen.dart';
 import 'parts/error_dialog.dart';
@@ -224,7 +224,7 @@ class _WorkHistoryInputAlertState extends ConsumerState<WorkHistoryInputAlert>
   Future<void> _makeAgentList() async {
     agentList = <Agent>[];
 
-    await AgentRepository().getAgentList(isar: widget.isar).then((List<Agent>? value) {
+    await AgentsRepository().getAgentList(isar: widget.isar).then((List<Agent>? value) {
       if (mounted) {
         setState(() => agentList = value);
       }
