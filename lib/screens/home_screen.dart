@@ -302,6 +302,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
                                                             agentId: (appParamState.factFakeMap[yearmonth] == true)
                                                                 ? totalWorkHistoryMapFact[yearmonth]!.agentId
                                                                 : 0,
+
+                                                            factFake:
+                                                                // ignore: use_if_null_to_convert_nulls_to_bools
+                                                                (appParamState.factFakeMap[yearmonth] == true) ? 0 : 1,
                                                           ),
                                                         );
                                                       },

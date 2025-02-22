@@ -20,7 +20,8 @@ class WorkHistoryInputAlert extends ConsumerStatefulWidget {
       required this.isar,
       required this.site,
       required this.agentId,
-      this.workHistoryList});
+      this.workHistoryList,
+      required this.factFake});
 
   final Isar isar;
 
@@ -31,6 +32,8 @@ class WorkHistoryInputAlert extends ConsumerStatefulWidget {
   final int agentId;
 
   final List<WorkHistory>? workHistoryList;
+
+  final int factFake;
 
   @override
   ConsumerState<WorkHistoryInputAlert> createState() => _WorkHistoryInputAlertState();
@@ -54,7 +57,8 @@ class _WorkHistoryInputAlertState extends ConsumerState<WorkHistoryInputAlert>
     _makeAgentList();
 
     if (widget.workHistoryList != null) {
-      dataPos = widget.workHistoryList!.indexWhere((WorkHistory element) => element.startDate == widget.ymStart);
+      dataPos = widget.workHistoryList!.indexWhere(
+          (WorkHistory element) => element.startDate == widget.ymStart && element.factFake == widget.factFake);
 
       if (dataPos != -1) {
         _siteNameEditingController.text = widget.workHistoryList![0].site;
@@ -253,8 +257,7 @@ class _WorkHistoryInputAlertState extends ConsumerState<WorkHistoryInputAlert>
       ..startDate = widget.ymStart
       ..site = _siteNameEditingController.text.trim()
       ..agentId = _agentId
-      // ignore: use_if_null_to_convert_nulls_to_bools
-      ..factFake = (appParamState.factFakeMap[widget.ymStart] == true) ? 0 : 1;
+      ..factFake = widget.factFake;
 
     await WorkHistoriesRepository().inputWorkHistory(isar: widget.isar, workHistory: workHistory).then(
       // ignore: always_specify_types
@@ -295,15 +298,10 @@ class _WorkHistoryInputAlertState extends ConsumerState<WorkHistoryInputAlert>
 
   ///
   Future<void> _deleteWorkHistory() async {
-    final bool? factFake = appParamState.factFakeMap[widget.ymStart];
-
-    // ignore: use_if_null_to_convert_nulls_to_bools
-    final int checkFactFake = (factFake == true) ? 0 : 1;
-
     WorkHistory? workHistory;
 
     widget.workHistoryList?.forEach((WorkHistory element) {
-      if (element.startDate == widget.ymStart && element.factFake == checkFactFake) {
+      if (element.startDate == widget.ymStart && element.factFake == widget.factFake) {
         workHistory = element;
       }
     });
