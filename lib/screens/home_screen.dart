@@ -10,6 +10,7 @@ import '../repository/agent_repository.dart';
 import '../repository/work_histories_repository.dart';
 import '../utility/function.dart';
 import 'components/agent_input_alert.dart';
+import 'components/agent_select_setting_alert.dart';
 import 'components/csv_data/data_export_alert.dart';
 import 'components/csv_data/data_import_alert.dart';
 import 'components/parts/work_history_dialog.dart';
@@ -126,6 +127,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
                   child: const Text('エージェント名登録'),
                 ),
               ),
+              GestureDetector(
+                onTap: () {
+                  WorkHistoryDialog(context: context, widget: AgentSelectSettingAlert(isar: widget.isar));
+                },
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
+                  margin: const EdgeInsets.all(5),
+                  child: const Text('エージェントセレクト設定'),
+                ),
+              ),
               Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
               GestureDetector(
                 onTap: () => WorkHistoryDialog(context: context, widget: DataExportAlert(isar: widget.isar)),
@@ -239,17 +251,23 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
                                 siteFake = totalWorkHistoryMapFake[yearmonth]!.site;
                               }
 
-                              final String dispSite =
-                                  // ignore: use_if_null_to_convert_nulls_to_bools
-                                  (appParamState.factFakeMap[yearmonth] == true) ? siteFact : siteFake;
+                              // ignore: use_if_null_to_convert_nulls_to_bools
+                              final int factFake = (appParamState.factFakeMap[yearmonth] == true) ? 0 : 1;
 
-                              final String dispAgent =
-                                  // ignore: use_if_null_to_convert_nulls_to_bools
-                                  (appParamState.factFakeMap[yearmonth] == true) ? agentFact : agentFake;
+                              final String dispSite = (factFake == 0) ? siteFact : siteFake;
+
+                              final String dispAgent = (factFake == 0) ? agentFact : agentFake;
 
                               final Color factFaceBgcolor = (siteFact != '' && siteFact == siteFake)
                                   ? Colors.greenAccent.withOpacity(0.1)
                                   : Colors.white.withOpacity(0.1);
+
+                              int dataPos = -1;
+
+                              if (workHistoryList != null) {
+                                dataPos = workHistoryList!.indexWhere((WorkHistory element3) =>
+                                    element3.startDate == yearmonth && element3.factFake == factFake);
+                              }
 
                               return Stack(
                                 children: <Widget>[
@@ -268,9 +286,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
                                                 Text((element2 + 1).toString().padLeft(2, '0')),
                                                 Row(
                                                   children: <Widget>[
+                                                    if (dataPos > -1 && dispSite != '-' && factFake == 0) ...<Widget>[
+                                                      Icon(Icons.note, color: Colors.white.withOpacity(0.3)),
+                                                      const SizedBox(width: 20),
+                                                    ],
                                                     GestureDetector(
                                                       onTap: () {
-                                                        if (appParamState.factFakeMap[yearmonth] != null) {
+                                                        if (factFake == 0) {
                                                           appParamNotifier.setYearmonthFactFake(
                                                             yearmonth: yearmonth,
                                                             flag: !appParamState.factFakeMap[yearmonth]!,
@@ -299,13 +321,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
                                                             site: dispSite,
 
                                                             // ignore: use_if_null_to_convert_nulls_to_bools
-                                                            agentId: (appParamState.factFakeMap[yearmonth] == true)
+                                                            agentId: (factFake == 0)
                                                                 ? totalWorkHistoryMapFact[yearmonth]!.agentId
                                                                 : 0,
 
-                                                            factFake:
-                                                                // ignore: use_if_null_to_convert_nulls_to_bools
-                                                                (appParamState.factFakeMap[yearmonth] == true) ? 0 : 1,
+                                                            factFake: factFake,
                                                           ),
                                                         );
                                                       },

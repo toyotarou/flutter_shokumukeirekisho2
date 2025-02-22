@@ -7,4 +7,6 @@ class Agent {
   Id id = Isar.autoIncrement;
 
   late String name;
+
+  late bool listUseFlag;
 }

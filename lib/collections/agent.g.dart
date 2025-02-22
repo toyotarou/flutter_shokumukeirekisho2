@@ -17,8 +17,13 @@ const AgentSchema = CollectionSchema(
   name: r'Agent',
   id: 1260808932571846533,
   properties: {
-    r'name': PropertySchema(
+    r'listUseFlag': PropertySchema(
       id: 0,
+      name: r'listUseFlag',
+      type: IsarType.bool,
+    ),
+    r'name': PropertySchema(
+      id: 1,
       name: r'name',
       type: IsarType.string,
     )
@@ -53,7 +58,8 @@ void _agentSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeString(offsets[0], object.name);
+  writer.writeBool(offsets[0], object.listUseFlag);
+  writer.writeString(offsets[1], object.name);
 }
 
 Agent _agentDeserialize(
@@ -64,7 +70,8 @@ Agent _agentDeserialize(
 ) {
   final object = Agent();
   object.id = id;
-  object.name = reader.readString(offsets[0]);
+  object.listUseFlag = reader.readBool(offsets[0]);
+  object.name = reader.readString(offsets[1]);
   return object;
 }
 
@@ -76,6 +83,8 @@ P _agentDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
+      return (reader.readBool(offset)) as P;
+    case 1:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -222,6 +231,16 @@ extension AgentQueryFilter on QueryBuilder<Agent, Agent, QFilterCondition> {
     });
   }
 
+  QueryBuilder<Agent, Agent, QAfterFilterCondition> listUseFlagEqualTo(
+      bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'listUseFlag',
+        value: value,
+      ));
+    });
+  }
+
   QueryBuilder<Agent, Agent, QAfterFilterCondition> nameEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -356,6 +375,18 @@ extension AgentQueryObject on QueryBuilder<Agent, Agent, QFilterCondition> {}
 extension AgentQueryLinks on QueryBuilder<Agent, Agent, QFilterCondition> {}
 
 extension AgentQuerySortBy on QueryBuilder<Agent, Agent, QSortBy> {
+  QueryBuilder<Agent, Agent, QAfterSortBy> sortByListUseFlag() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'listUseFlag', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Agent, Agent, QAfterSortBy> sortByListUseFlagDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'listUseFlag', Sort.desc);
+    });
+  }
+
   QueryBuilder<Agent, Agent, QAfterSortBy> sortByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
@@ -382,6 +413,18 @@ extension AgentQuerySortThenBy on QueryBuilder<Agent, Agent, QSortThenBy> {
     });
   }
 
+  QueryBuilder<Agent, Agent, QAfterSortBy> thenByListUseFlag() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'listUseFlag', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Agent, Agent, QAfterSortBy> thenByListUseFlagDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'listUseFlag', Sort.desc);
+    });
+  }
+
   QueryBuilder<Agent, Agent, QAfterSortBy> thenByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
@@ -396,6 +439,12 @@ extension AgentQuerySortThenBy on QueryBuilder<Agent, Agent, QSortThenBy> {
 }
 
 extension AgentQueryWhereDistinct on QueryBuilder<Agent, Agent, QDistinct> {
+  QueryBuilder<Agent, Agent, QDistinct> distinctByListUseFlag() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'listUseFlag');
+    });
+  }
+
   QueryBuilder<Agent, Agent, QDistinct> distinctByName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -408,6 +457,12 @@ extension AgentQueryProperty on QueryBuilder<Agent, Agent, QQueryProperty> {
   QueryBuilder<Agent, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<Agent, bool, QQueryOperations> listUseFlagProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'listUseFlag');
     });
   }
 
