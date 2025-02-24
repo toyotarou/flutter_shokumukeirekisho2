@@ -7,6 +7,10 @@ class NotesRepository {
   Future<Note?> getNote({required Isar isar, required int id}) async => isar.notes.get(id);
 
   ///
+  Future<Note?> getNoteByYearmonth({required Isar isar, required String yearmonth}) async =>
+      isar.notes.filter().startDateEqualTo(yearmonth).findFirst();
+
+  ///
   Future<List<Note>?> getNoteList({required Isar isar}) async => isar.notes.where().findAll();
 
   ///

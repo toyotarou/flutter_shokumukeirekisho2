@@ -194,7 +194,7 @@ class _AgentInputAlertState extends ConsumerState<AgentInputAlert> {
 
   ///
   Future<void> _makeAgentList() async {
-    agentList = [];
+    agentList = <Agent>[];
 
     await AgentsRepository().getAgentList(isar: widget.isar).then((List<Agent>? value) {
       if (mounted) {

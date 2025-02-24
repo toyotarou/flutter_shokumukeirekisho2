@@ -86,7 +86,7 @@ class _AgentSelectSettingAlertState extends State<AgentSelectSettingAlert> {
 
   ///
   Future<void> makeAgentList() async {
-    agentList = [];
+    agentList = <Agent>[];
 
     await AgentsRepository().getAgentList(isar: widget.isar).then((List<Agent>? value) {
       if (mounted) {

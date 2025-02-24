@@ -13,6 +13,7 @@ import 'components/agent_input_alert.dart';
 import 'components/agent_select_setting_alert.dart';
 import 'components/csv_data/data_export_alert.dart';
 import 'components/csv_data/data_import_alert.dart';
+import 'components/notes_input_alert.dart';
 import 'components/parts/work_history_dialog.dart';
 import 'components/work_history_input_alert.dart';
 
@@ -287,7 +288,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
                                                 Row(
                                                   children: <Widget>[
                                                     if (dataPos > -1 && dispSite != '-' && factFake == 0) ...<Widget>[
-                                                      Icon(Icons.note, color: Colors.white.withOpacity(0.3)),
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          WorkHistoryDialog(
+                                                            context: context,
+                                                            widget: NotesInputAlert(
+                                                              isar: widget.isar,
+                                                              yearmonth: yearmonth,
+                                                              totalWorkHistoryMap: totalWorkHistoryMapFact[yearmonth],
+                                                              agentMap: agentMap,
+                                                            ),
+                                                          );
+                                                        },
+                                                        child: Icon(Icons.note, color: Colors.white.withOpacity(0.3)),
+                                                      ),
                                                       const SizedBox(width: 20),
                                                     ],
                                                     GestureDetector(
