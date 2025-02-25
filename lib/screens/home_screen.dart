@@ -45,6 +45,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
 
   Map<int, String> agentMap = <int, String>{};
 
+  List<Agent>? agentList = <Agent>[];
+
   ///
   @override
   void initState() {
@@ -72,9 +74,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
+        title: const Text('職務経歴書', style: TextStyle(fontSize: 16)),
         actions: <Widget>[
           IconButton(
             onPressed: () {
+              appParamNotifier.setSelectDisplayReEntryAgent(index: 0);
+
               Navigator.pushReplacement(
                 context,
                 // ignore: inference_failure_on_instance_creation, always_specify_types
@@ -100,6 +105,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
             Container(width: context.screenSize.width),
             const SizedBox(height: 20),
             displayYearsWidget(),
+            const SizedBox(height: 20),
+            Row(
+              children: <Widget>[
+                Expanded(child: displayReEntryAgentSelect()),
+                Expanded(child: Container()),
+              ],
+            ),
+            const SizedBox(height: 10),
             displayShokurekiList(),
           ],
         ),
@@ -259,9 +272,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
 
                               final String dispAgent = (factFake == 0) ? agentFact : agentFake;
 
-                              final Color factFaceBgcolor = (siteFact != '' && siteFact == siteFake)
-                                  ? Colors.greenAccent.withOpacity(0.1)
-                                  : Colors.white.withOpacity(0.1);
+                              Color factFakeBgcolor = (siteFact != '' && siteFact == siteFake)
+                                  ? Colors.greenAccent.withOpacity(0.15)
+                                  : Colors.white.withOpacity(0.15);
+
+                              if (appParamState.selectDisplayReEntryAgent != 0) {
+                                if (totalWorkHistoryMapFact[yearmonth] != null) {
+                                  if (totalWorkHistoryMapFact[yearmonth]!.agentId ==
+                                      appParamState.selectDisplayReEntryAgent) {
+                                    factFakeBgcolor = Colors.redAccent.withOpacity(0.15);
+                                  }
+                                }
+                              }
 
                               int dataPos = -1;
 
@@ -275,7 +297,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
                                   Container(
                                     margin: const EdgeInsets.all(2),
                                     padding: const EdgeInsets.all(5),
-                                    decoration: BoxDecoration(color: factFaceBgcolor),
+                                    decoration: BoxDecoration(color: factFakeBgcolor),
                                     child: Stack(
                                       children: <Widget>[
                                         Column(
@@ -306,12 +328,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
                                                     ],
                                                     GestureDetector(
                                                       onTap: () {
-                                                        if (factFake == 0) {
-                                                          appParamNotifier.setYearmonthFactFake(
-                                                            yearmonth: yearmonth,
-                                                            flag: !appParamState.factFakeMap[yearmonth]!,
-                                                          );
-                                                        }
+                                                        appParamNotifier.setYearmonthFactFake(
+                                                          yearmonth: yearmonth,
+                                                          flag: !appParamState.factFakeMap[yearmonth]!,
+                                                        );
                                                       },
                                                       child: Icon(
                                                         Icons.compare_arrows_outlined,
@@ -450,6 +470,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
     await AgentsRepository().getAgentList(isar: widget.isar).then((List<Agent>? value) {
       if (mounted) {
         setState(() {
+          agentList = value;
+
           if (value!.isNotEmpty) {
             for (final Agent element in value) {
               agentMap[element.id] = element.name;
@@ -458,5 +480,36 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
         });
       }
     });
+  }
+
+  ///
+  Widget displayReEntryAgentSelect() {
+    // ignore: strict_raw_type, always_specify_types
+    final List<DropdownMenuItem> dropdownMenuItem = [
+      // ignore: always_specify_types
+      const DropdownMenuItem(value: 0, child: Text('', style: TextStyle(fontSize: 12))),
+    ];
+
+    agentList?.forEach((Agent element) {
+      if (element.listUseFlag) {
+        dropdownMenuItem.add(
+          // ignore: always_specify_types
+          DropdownMenuItem(value: element.id, child: Text(element.name, style: const TextStyle(fontSize: 12))),
+        );
+      }
+    });
+
+    return
+        // ignore: always_specify_types
+        DropdownButton(
+      isExpanded: true,
+      dropdownColor: Colors.pinkAccent.withOpacity(0.1),
+      iconEnabledColor: Colors.white,
+      // ignore: always_specify_types
+      items: dropdownMenuItem.map((element) => element).toList(),
+      value: appParamState.selectDisplayReEntryAgent,
+      // ignore: always_specify_types
+      onChanged: (value) => appParamNotifier.setSelectDisplayReEntryAgent(index: value.toString().toInt()),
+    );
   }
 }

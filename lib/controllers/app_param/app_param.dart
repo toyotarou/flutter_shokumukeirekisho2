@@ -13,6 +13,7 @@ class AppParamState with _$AppParamState {
   const factory AppParamState({
     @Default(<String, bool>{}) Map<String, bool> factFakeMap,
     @Default(true) bool displayFactData,
+    @Default(0) int selectDisplayReEntryAgent,
   }) = _AppParamState;
 }
 
@@ -53,4 +54,7 @@ class AppParam extends _$AppParam {
 
     state = state.copyWith(displayFactData: flag, factFakeMap: map);
   }
+
+  ///
+  void setSelectDisplayReEntryAgent({required int index}) => state = state.copyWith(selectDisplayReEntryAgent: index);
 }

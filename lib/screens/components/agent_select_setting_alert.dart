@@ -19,15 +19,10 @@ class _AgentSelectSettingAlertState extends State<AgentSelectSettingAlert> {
 
   ///
   @override
-  void initState() {
-    super.initState();
-
-    makeAgentList();
-  }
-
-  ///
-  @override
   Widget build(BuildContext context) {
+    // ignore: always_specify_types
+    Future(() => makeAgentList());
+
     return AlertDialog(
       titlePadding: EdgeInsets.zero,
       contentPadding: EdgeInsets.zero,
@@ -67,13 +62,26 @@ class _AgentSelectSettingAlertState extends State<AgentSelectSettingAlert> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[Container(), Container()],
+                InkWell(
+                  onTap: () => updateAgent(agent: element, value: !element.listUseFlag),
+                  child: Row(
+                    children: <Widget>[
+                      Checkbox(
+                        activeColor: Colors.greenAccent,
+                        value: element.listUseFlag,
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        visualDensity: const VisualDensity(vertical: -2),
+                        onChanged: (bool? value) {
+                          if (value != null) {
+                            updateAgent(agent: element, value: value);
+                          }
+                        },
+                      ),
+                      const SizedBox(width: 4),
+                      Expanded(child: Text(element.name)),
+                    ],
+                  ),
                 ),
-                Text(element.id.toString()),
-                Text(element.name),
-                Text(element.listUseFlag.toString()),
               ],
             ),
           ),
@@ -93,5 +101,12 @@ class _AgentSelectSettingAlertState extends State<AgentSelectSettingAlert> {
         setState(() => agentList = value);
       }
     });
+  }
+
+  ///
+  Future<void> updateAgent({required Agent agent, required bool value}) async {
+    agent.listUseFlag = value;
+
+    await widget.isar.writeTxn(() async => AgentsRepository().updateAgent(isar: widget.isar, agent: agent));
   }
 }
