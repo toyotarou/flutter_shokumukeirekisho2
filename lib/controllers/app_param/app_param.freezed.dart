@@ -19,6 +19,7 @@ mixin _$AppParamState {
   Map<String, bool> get factFakeMap => throw _privateConstructorUsedError;
   bool get displayFactData => throw _privateConstructorUsedError;
   int get selectDisplayReEntryAgent => throw _privateConstructorUsedError;
+  int get jumpIndex => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $AppParamStateCopyWith<AppParamState> get copyWith =>
@@ -34,7 +35,8 @@ abstract class $AppParamStateCopyWith<$Res> {
   $Res call(
       {Map<String, bool> factFakeMap,
       bool displayFactData,
-      int selectDisplayReEntryAgent});
+      int selectDisplayReEntryAgent,
+      int jumpIndex});
 }
 
 /// @nodoc
@@ -53,6 +55,7 @@ class _$AppParamStateCopyWithImpl<$Res, $Val extends AppParamState>
     Object? factFakeMap = null,
     Object? displayFactData = null,
     Object? selectDisplayReEntryAgent = null,
+    Object? jumpIndex = null,
   }) {
     return _then(_value.copyWith(
       factFakeMap: null == factFakeMap
@@ -66,6 +69,10 @@ class _$AppParamStateCopyWithImpl<$Res, $Val extends AppParamState>
       selectDisplayReEntryAgent: null == selectDisplayReEntryAgent
           ? _value.selectDisplayReEntryAgent
           : selectDisplayReEntryAgent // ignore: cast_nullable_to_non_nullable
+              as int,
+      jumpIndex: null == jumpIndex
+          ? _value.jumpIndex
+          : jumpIndex // ignore: cast_nullable_to_non_nullable
               as int,
     ) as $Val);
   }
@@ -82,7 +89,8 @@ abstract class _$$AppParamStateImplCopyWith<$Res>
   $Res call(
       {Map<String, bool> factFakeMap,
       bool displayFactData,
-      int selectDisplayReEntryAgent});
+      int selectDisplayReEntryAgent,
+      int jumpIndex});
 }
 
 /// @nodoc
@@ -99,6 +107,7 @@ class __$$AppParamStateImplCopyWithImpl<$Res>
     Object? factFakeMap = null,
     Object? displayFactData = null,
     Object? selectDisplayReEntryAgent = null,
+    Object? jumpIndex = null,
   }) {
     return _then(_$AppParamStateImpl(
       factFakeMap: null == factFakeMap
@@ -113,6 +122,10 @@ class __$$AppParamStateImplCopyWithImpl<$Res>
           ? _value.selectDisplayReEntryAgent
           : selectDisplayReEntryAgent // ignore: cast_nullable_to_non_nullable
               as int,
+      jumpIndex: null == jumpIndex
+          ? _value.jumpIndex
+          : jumpIndex // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -123,7 +136,8 @@ class _$AppParamStateImpl implements _AppParamState {
   const _$AppParamStateImpl(
       {final Map<String, bool> factFakeMap = const <String, bool>{},
       this.displayFactData = true,
-      this.selectDisplayReEntryAgent = 0})
+      this.selectDisplayReEntryAgent = 0,
+      this.jumpIndex = 0})
       : _factFakeMap = factFakeMap;
 
   final Map<String, bool> _factFakeMap;
@@ -141,10 +155,13 @@ class _$AppParamStateImpl implements _AppParamState {
   @override
   @JsonKey()
   final int selectDisplayReEntryAgent;
+  @override
+  @JsonKey()
+  final int jumpIndex;
 
   @override
   String toString() {
-    return 'AppParamState(factFakeMap: $factFakeMap, displayFactData: $displayFactData, selectDisplayReEntryAgent: $selectDisplayReEntryAgent)';
+    return 'AppParamState(factFakeMap: $factFakeMap, displayFactData: $displayFactData, selectDisplayReEntryAgent: $selectDisplayReEntryAgent, jumpIndex: $jumpIndex)';
   }
 
   @override
@@ -158,7 +175,9 @@ class _$AppParamStateImpl implements _AppParamState {
                 other.displayFactData == displayFactData) &&
             (identical(other.selectDisplayReEntryAgent,
                     selectDisplayReEntryAgent) ||
-                other.selectDisplayReEntryAgent == selectDisplayReEntryAgent));
+                other.selectDisplayReEntryAgent == selectDisplayReEntryAgent) &&
+            (identical(other.jumpIndex, jumpIndex) ||
+                other.jumpIndex == jumpIndex));
   }
 
   @override
@@ -166,7 +185,8 @@ class _$AppParamStateImpl implements _AppParamState {
       runtimeType,
       const DeepCollectionEquality().hash(_factFakeMap),
       displayFactData,
-      selectDisplayReEntryAgent);
+      selectDisplayReEntryAgent,
+      jumpIndex);
 
   @JsonKey(ignore: true)
   @override
@@ -179,7 +199,8 @@ abstract class _AppParamState implements AppParamState {
   const factory _AppParamState(
       {final Map<String, bool> factFakeMap,
       final bool displayFactData,
-      final int selectDisplayReEntryAgent}) = _$AppParamStateImpl;
+      final int selectDisplayReEntryAgent,
+      final int jumpIndex}) = _$AppParamStateImpl;
 
   @override
   Map<String, bool> get factFakeMap;
@@ -187,6 +208,8 @@ abstract class _AppParamState implements AppParamState {
   bool get displayFactData;
   @override
   int get selectDisplayReEntryAgent;
+  @override
+  int get jumpIndex;
   @override
   @JsonKey(ignore: true)
   _$$AppParamStateImplCopyWith<_$AppParamStateImpl> get copyWith =>

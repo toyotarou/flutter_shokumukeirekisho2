@@ -71,6 +71,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
   ///
   @override
   Widget build(BuildContext context) {
+    // ignore: always_specify_types
+    final List<int> years = List.generate(DateTime.now().year - startYear + 1, (int index) => index + startYear);
+
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -89,9 +92,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
             icon: const Icon(Icons.refresh),
           ),
           IconButton(
-            onPressed: () {
-              appParamNotifier.setDisplayFactData(flag: !appParamState.displayFactData);
-            },
+            onPressed: () => appParamNotifier.setDisplayFactData(flag: !appParamState.displayFactData),
             icon: Icon(
               Icons.compare_arrows_outlined,
               color: (appParamState.displayFactData) ? Colors.white : Colors.yellowAccent,
@@ -104,15 +105,43 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
           children: <Widget>[
             Container(width: context.screenSize.width),
             const SizedBox(height: 20),
-            displayYearsWidget(),
-            const SizedBox(height: 20),
             Row(
               children: <Widget>[
                 Expanded(child: displayReEntryAgentSelect()),
-                Expanded(child: Container()),
+                Expanded(
+                    child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Container(),
+                    Row(
+                      children: <Widget>[
+                        SizedBox(
+                          width: 60,
+                          height: 60,
+                          child: PageView.builder(
+                            itemCount: years.length,
+                            onPageChanged: (int index) => appParamNotifier.setJumpIndex(index: index),
+                            itemBuilder: (BuildContext context, int index) {
+                              return CircleAvatar(
+                                backgroundColor: Colors.blueAccent.withOpacity(0.4),
+                                child: Text(
+                                  years[index].toString(),
+                                  style: const TextStyle(fontSize: 12, color: Colors.white),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () => scrollToIndex(appParamState.jumpIndex),
+                          icon: const Icon(Icons.play_arrow),
+                        ),
+                      ],
+                    ),
+                  ],
+                )),
               ],
             ),
-            const SizedBox(height: 10),
             displayShokurekiList(),
           ],
         ),
@@ -142,9 +171,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
                 ),
               ),
               GestureDetector(
-                onTap: () {
-                  WorkHistoryDialog(context: context, widget: AgentSelectSettingAlert(isar: widget.isar));
-                },
+                onTap: () => WorkHistoryDialog(context: context, widget: AgentSelectSettingAlert(isar: widget.isar)),
                 child: Container(
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 3),
@@ -180,36 +207,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  ///
-  Widget displayYearsWidget() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children:
-            // ignore: always_specify_types
-            List.generate(DateTime.now().year - startYear + 1, (int index) => index + startYear).map(
-          (int element) {
-            return Row(
-              children: <Widget>[
-                GestureDetector(
-                  onTap: () => scrollToIndex(element - startYear),
-                  child: CircleAvatar(
-                    backgroundColor: Colors.blueAccent.withOpacity(0.4),
-                    child: Text(
-                      '$element',
-                      style: const TextStyle(fontSize: 12, color: Colors.white),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 5),
-              ],
-            );
-          },
-        ).toList(),
       ),
     );
   }

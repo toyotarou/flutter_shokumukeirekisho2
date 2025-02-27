@@ -14,6 +14,7 @@ class AppParamState with _$AppParamState {
     @Default(<String, bool>{}) Map<String, bool> factFakeMap,
     @Default(true) bool displayFactData,
     @Default(0) int selectDisplayReEntryAgent,
+    @Default(0) int jumpIndex,
   }) = _AppParamState;
 }
 
@@ -57,4 +58,7 @@ class AppParam extends _$AppParam {
 
   ///
   void setSelectDisplayReEntryAgent({required int index}) => state = state.copyWith(selectDisplayReEntryAgent: index);
+
+  ///
+  void setJumpIndex({required int index}) => state = state.copyWith(jumpIndex: index);
 }

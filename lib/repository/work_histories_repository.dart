@@ -7,7 +7,8 @@ class WorkHistoriesRepository {
   Future<WorkHistory?> getWorkHistory({required Isar isar, required int id}) async => isar.workHistorys.get(id);
 
   ///
-  Future<List<WorkHistory>?> getWorkHistoryList({required Isar isar}) async => isar.workHistorys.where().findAll();
+  Future<List<WorkHistory>?> getWorkHistoryList({required Isar isar}) async =>
+      isar.workHistorys.where().sortByFactFake().thenByStartDate().findAll();
 
   ///
   Future<void> inputWorkHistoryList({required Isar isar, required List<WorkHistory> workHistoryList}) async {
