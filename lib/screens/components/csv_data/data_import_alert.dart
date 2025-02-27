@@ -6,9 +6,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:isar/isar.dart';
 
 import '../../../collections/agent.dart';
+import '../../../collections/note.dart';
 import '../../../collections/work_history.dart';
 import '../../../extensions/extensions.dart';
 import '../../../repository/agents_repository.dart';
+import '../../../repository/notes_repository.dart';
 import '../../../repository/work_histories_repository.dart';
 import '../parts/error_dialog.dart';
 
@@ -154,6 +156,9 @@ class _DataImportAlertState extends State<DataImportAlert> {
 
       case 'workHistory':
         importDataList = <WorkHistory>[];
+
+      case 'note':
+        importDataList = <Note>[];
     }
 
     final List<Widget> widgetList = <Widget>[];
@@ -179,7 +184,11 @@ class _DataImportAlertState extends State<DataImportAlert> {
 
       switch (csvName) {
         case 'agent':
-          importDataList.add(Agent()..name = exLine[1].trim());
+          // ignore: avoid_bool_literals_in_conditional_expressions
+          final bool luf = (exLine[2] == '0') ? true : false;
+          importDataList.add(Agent()
+            ..name = exLine[1].trim()
+            ..listUseFlag = luf);
 
         case 'workHistory':
           importDataList.add(WorkHistory()
@@ -187,6 +196,11 @@ class _DataImportAlertState extends State<DataImportAlert> {
             ..site = exLine[2].trim()
             ..agentId = exLine[3].trim().toInt()
             ..factFake = exLine[4].trim().toInt());
+
+        case 'note':
+          importDataList.add(Note()
+            ..startDate = exLine[1].trim()
+            ..note = exLine[2].trim());
       }
     }
 
@@ -242,6 +256,14 @@ class _DataImportAlertState extends State<DataImportAlert> {
             .inputWorkHistoryList(isar: widget.isar, workHistoryList: importDataList as List<WorkHistory>)
             // ignore: always_specify_types
             .then((value) {
+          if (mounted) {
+            Navigator.pop(context);
+          }
+        });
+
+      case 'note':
+        // ignore: always_specify_types
+        await NotesRepository().inputNoteList(isar: widget.isar, noteList: importDataList as List<Note>).then((value) {
           if (mounted) {
             Navigator.pop(context);
           }

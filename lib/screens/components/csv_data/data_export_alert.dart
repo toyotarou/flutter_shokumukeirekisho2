@@ -12,9 +12,11 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../../collections/agent.dart';
+import '../../../collections/note.dart';
 import '../../../collections/work_history.dart';
 import '../../../extensions/extensions.dart';
 import '../../../repository/agents_repository.dart';
+import '../../../repository/notes_repository.dart';
 import '../../../repository/work_histories_repository.dart';
 import '../parts/error_dialog.dart';
 
@@ -82,7 +84,7 @@ class _DataExportAlertState extends ConsumerState<DataExportAlert> {
               Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: <String>['agent', 'workHistory'].map(
+                children: <String>['agent', 'workHistory', 'note'].map(
                   (String e) {
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -162,7 +164,9 @@ class _DataExportAlertState extends ConsumerState<DataExportAlert> {
       case 'agent':
         await AgentsRepository().getAgentList(isar: widget.isar).then((List<Agent>? value) {
           value?.forEach((Agent element) {
-            outputValuesList.add(<String>[element.id.toString(), element.name].join(','));
+            final int luf = (element.listUseFlag) ? 0 : 1;
+
+            outputValuesList.add(<String>[element.id.toString(), element.name, luf.toString()].join(','));
           });
         });
 
@@ -175,6 +179,17 @@ class _DataExportAlertState extends ConsumerState<DataExportAlert> {
               element.site,
               element.agentId.toString(),
               element.factFake,
+            ].join(','));
+          });
+        });
+
+      case 'note':
+        await NotesRepository().getNoteList(isar: widget.isar).then((List<Note>? value) {
+          value?.forEach((Note element) {
+            outputValuesList.add(<String>[
+              element.id.toString(),
+              element.startDate,
+              element.note,
             ].join(','));
           });
         });
