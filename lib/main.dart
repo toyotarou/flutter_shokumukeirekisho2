@@ -49,26 +49,8 @@ class _MyAppState extends ConsumerState<MyApp> with ControllersMixin<MyApp> {
     super.initState();
 
     workAnkenNotifier.getAllWorkAnkenData();
-
-    // lifetimeNotifier.getAllLifetimeData();
-    // holidayNotifier.getAllHolidayData();
-    // walkNotifier.getAllWalkData();
-    // moneyNotifier.getAllMoneyData();
-    // lifetimeItemNotifier.getAllLifetimeItemData();
-    // geolocNotifier.getAllGeolocData();
-    // templeNotifier.getAllTempleData();
-    // transportationNotifier.getAllTransportationData();
-    // moneySpendNotifier.getAllMoneySpendData();
-    // workTimeNotifier.getAllWorkTimeData();
-    // weatherNotifier.getAllWeatherData();
-    // moneySpendItemNotifier.getAllMoneySpendItemData();
-    // salaryNotifier.getAllSalaryData();
-    // goldNotifier.getAllGoldData();
-    // stockNotifier.getAllStockData();
-    // toushiShintakuNotifier.getAllToushiShintakuData();
-    // creditSummaryNotifier.getAllCreditSummaryData();
-    // fundNotifier.getAllFundData();
-    // timePlaceNotifier.getAllTimePlaceData();
+    workContractNotifier.getAllWorkContractData();
+    workTruthNotifier.getAllWorkTruthData();
   }
 
   ///
@@ -89,29 +71,10 @@ class _MyAppState extends ConsumerState<MyApp> with ControllersMixin<MyApp> {
       debugShowCheckedModeBanner: false,
       home: GestureDetector(
         onTap: () => primaryFocus?.unfocus(),
-        child: const HomeScreen(
-          // holidayList: holidayState.holidayList,
-          // walkMap: walkState.walkMap,
-          // moneyMap: moneyState.moneyMap,
-          // lifetimeItemList: lifetimeItemState.lifetimeItemList,
-          // geolocMap: geolocState.geolocMap,
-          // templeMap: templeState.templeMap,
-          // transportationMap: transportationState.transportationMap,
-          // moneySpendMap: moneySpendState.moneySpendMap,
-          // workTimeMap: workTimeState.workTimeMap,
-          // workTimeDateMap: workTimeState.workTimeDateMap,
-          // weatherMap: weatherState.weatherMap,
-          // moneySpendItemMap: moneySpendItemState.moneySpendItemMap,
-          // salaryMap: salaryState.salaryMap,
-          // goldMap: goldState.goldMap,
-          // stockMap: stockState.stockMap,
-          // toushiShintakuMap: toushiShintakuState.toushiShintakuMap,
-          // stationList: transportationState.stationList,
-          // creditSummaryMap: creditSummaryState.creditSummaryMap,
-          // fundRelationMap: fundState.fundRelationMap,
-          // stockTickerMap: stockState.stockTickerMap,
-          // toushiShintakuRelationalMap: toushiShintakuState.toushiShintakuRelationalMap,
-          // timePlaceMap: timePlaceState.timePlaceMap,
+        child: HomeScreen(
+          workAnkenMap: workAnkenState.workAnkenMap,
+          workContractMap: workContractState.workContractMap,
+          workTruthMap: workTruthState.workTruthMap,
         ),
       ),
     );
