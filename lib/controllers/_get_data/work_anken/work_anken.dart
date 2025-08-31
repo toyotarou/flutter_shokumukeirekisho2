@@ -62,6 +62,10 @@ class WorkAnken extends _$WorkAnken {
       for (int i = 0; i < diffDays; i++) {
         final String yearMonth = DateTime(first.year.toInt(), first.month.toInt()).add(Duration(days: i)).yyyymm;
 
+        if (yearMonthList.contains(yearMonth)) {
+          continue;
+        }
+
         if (map2[yearMonth] != null) {
           lastRecord = map2[yearMonth];
         }
