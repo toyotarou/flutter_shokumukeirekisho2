@@ -28,7 +28,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
 
   Utility utility = Utility();
 
-  List<int> listItemsIndexes = <int>[];
+  List<String> itemsIndexYearMonthList = <String>[];
 
   ///
   @override
@@ -148,7 +148,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
             onPressed: () {
               int num = appParamState.listItemIndex + 1;
 
-              final List<int> tempList = listItemsIndexes.toSet().toList();
+              final List<String> tempList = itemsIndexYearMonthList.toSet().toList();
 
               if (num >= tempList.length) {
                 num = tempList.length - 2;
@@ -273,7 +273,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
                         children: <Widget>[
                           Expanded(child: Text(yearMonth)),
                           SizedBox(
-                            width: context.screenSize.width * 0.6,
+                            width: context.screenSize.width * 0.5,
+
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
@@ -312,16 +313,37 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
                           const SizedBox(width: 20),
 
                           if (truth == null || truth.name == keepValue || truth.name == '-')
-                            const Icon(Icons.square_outlined, color: Colors.transparent)
+                            const Row(
+                              children: <Widget>[
+                                Icon(Icons.square_outlined, color: Colors.transparent),
+                                SizedBox(width: 10),
+                                Icon(Icons.square_outlined, color: Colors.transparent),
+                              ],
+                            )
                           else
-                            Icon(key: globalKeyList2[k], Icons.info, color: Colors.white.withValues(alpha: 0.6)),
+                            Row(
+                              children: <Widget>[
+                                GestureDetector(
+                                  onTap: () {
+                                    appParamNotifier.setListItemIndex(
+                                      index: itemsIndexYearMonthList.indexWhere(
+                                        (String element) => element == yearMonth,
+                                      ),
+                                    );
+                                  },
+                                  child: Icon(Icons.location_on, color: Colors.white.withValues(alpha: 0.6)),
+                                ),
+                                const SizedBox(width: 10),
+                                Icon(key: globalKeyList2[k], Icons.info, color: Colors.white.withValues(alpha: 0.6)),
+                              ],
+                            ),
                         ],
                       )
                     : Row(
                         children: <Widget>[
                           Expanded(child: Text(yearMonth)),
                           SizedBox(
-                            width: context.screenSize.width * 0.6,
+                            width: context.screenSize.width * 0.5,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
@@ -347,9 +369,30 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
                           const SizedBox(width: 20),
 
                           if (anken == null || anken.name == keepValue || anken.name == '-')
-                            const Icon(Icons.square_outlined, color: Colors.transparent)
+                            const Row(
+                              children: <Widget>[
+                                Icon(Icons.square_outlined, color: Colors.transparent),
+                                SizedBox(width: 10),
+                                Icon(Icons.square_outlined, color: Colors.transparent),
+                              ],
+                            )
                           else
-                            Icon(key: globalKeyList2[k], Icons.info, color: Colors.white.withValues(alpha: 0.6)),
+                            Row(
+                              children: <Widget>[
+                                GestureDetector(
+                                  onTap: () {
+                                    appParamNotifier.setListItemIndex(
+                                      index: itemsIndexYearMonthList.indexWhere(
+                                        (String element) => element == yearMonth,
+                                      ),
+                                    );
+                                  },
+                                  child: Icon(Icons.location_on, color: Colors.white.withValues(alpha: 0.6)),
+                                ),
+                                const SizedBox(width: 10),
+                                Icon(key: globalKeyList2[k], Icons.info, color: Colors.white.withValues(alpha: 0.6)),
+                              ],
+                            ),
                         ],
                       ),
               ),
@@ -358,13 +401,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
 
           if (appParamState.isDisplayTruth) {
             if (truth != null && truth.name != keepValue && truth.name != '-') {
-              listItemsIndexes.add(k);
+              itemsIndexYearMonthList.add(yearMonth);
 
               k++;
             }
           } else {
             if (anken != null && anken.name != keepValue && anken.name != '-') {
-              listItemsIndexes.add(k);
+              itemsIndexYearMonthList.add(yearMonth);
 
               k++;
             }
