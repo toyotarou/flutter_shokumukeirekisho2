@@ -17,8 +17,11 @@ class AppParamState with _$AppParamState {
     @Default(<String, WorkContractModel>{}) Map<String, WorkContractModel> keepWorkContractMap,
     @Default(<String, WorkTruthModel>{}) Map<String, WorkTruthModel> keepWorkTruthMap,
 
-    //
+    ///
     @Default(false) bool isDisplayTruth,
+
+    ///
+    @Default('') String selectedListYear,
   }) = _AppParamState;
 }
 
@@ -44,4 +47,7 @@ class AppParam extends _$AppParam {
 
   ///
   void setIsDisplayTruth({required bool flag}) => state = state.copyWith(isDisplayTruth: flag);
+
+  ///
+  void setSelectedListYear({required String year}) => state = state.copyWith(selectedListYear: year);
 }

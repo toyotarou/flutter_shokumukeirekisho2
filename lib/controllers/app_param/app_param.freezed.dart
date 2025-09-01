@@ -21,8 +21,13 @@ mixin _$AppParamState {
   Map<String, WorkContractModel> get keepWorkContractMap =>
       throw _privateConstructorUsedError;
   Map<String, WorkTruthModel> get keepWorkTruthMap =>
-      throw _privateConstructorUsedError; //
+      throw _privateConstructorUsedError;
+
+  ///
   bool get isDisplayTruth => throw _privateConstructorUsedError;
+
+  ///
+  String get selectedListYear => throw _privateConstructorUsedError;
 
   /// Create a copy of AppParamState
   /// with the given fields replaced by the non-null parameter values.
@@ -41,7 +46,8 @@ abstract class $AppParamStateCopyWith<$Res> {
       {Map<String, WorkAnkenModel> keepWorkAnkenMap,
       Map<String, WorkContractModel> keepWorkContractMap,
       Map<String, WorkTruthModel> keepWorkTruthMap,
-      bool isDisplayTruth});
+      bool isDisplayTruth,
+      String selectedListYear});
 }
 
 /// @nodoc
@@ -63,6 +69,7 @@ class _$AppParamStateCopyWithImpl<$Res, $Val extends AppParamState>
     Object? keepWorkContractMap = null,
     Object? keepWorkTruthMap = null,
     Object? isDisplayTruth = null,
+    Object? selectedListYear = null,
   }) {
     return _then(_value.copyWith(
       keepWorkAnkenMap: null == keepWorkAnkenMap
@@ -81,6 +88,10 @@ class _$AppParamStateCopyWithImpl<$Res, $Val extends AppParamState>
           ? _value.isDisplayTruth
           : isDisplayTruth // ignore: cast_nullable_to_non_nullable
               as bool,
+      selectedListYear: null == selectedListYear
+          ? _value.selectedListYear
+          : selectedListYear // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -97,7 +108,8 @@ abstract class _$$AppParamStateImplCopyWith<$Res>
       {Map<String, WorkAnkenModel> keepWorkAnkenMap,
       Map<String, WorkContractModel> keepWorkContractMap,
       Map<String, WorkTruthModel> keepWorkTruthMap,
-      bool isDisplayTruth});
+      bool isDisplayTruth,
+      String selectedListYear});
 }
 
 /// @nodoc
@@ -117,6 +129,7 @@ class __$$AppParamStateImplCopyWithImpl<$Res>
     Object? keepWorkContractMap = null,
     Object? keepWorkTruthMap = null,
     Object? isDisplayTruth = null,
+    Object? selectedListYear = null,
   }) {
     return _then(_$AppParamStateImpl(
       keepWorkAnkenMap: null == keepWorkAnkenMap
@@ -135,6 +148,10 @@ class __$$AppParamStateImplCopyWithImpl<$Res>
           ? _value.isDisplayTruth
           : isDisplayTruth // ignore: cast_nullable_to_non_nullable
               as bool,
+      selectedListYear: null == selectedListYear
+          ? _value.selectedListYear
+          : selectedListYear // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -149,7 +166,8 @@ class _$AppParamStateImpl implements _AppParamState {
           const <String, WorkContractModel>{},
       final Map<String, WorkTruthModel> keepWorkTruthMap =
           const <String, WorkTruthModel>{},
-      this.isDisplayTruth = false})
+      this.isDisplayTruth = false,
+      this.selectedListYear = ''})
       : _keepWorkAnkenMap = keepWorkAnkenMap,
         _keepWorkContractMap = keepWorkContractMap,
         _keepWorkTruthMap = keepWorkTruthMap;
@@ -182,14 +200,19 @@ class _$AppParamStateImpl implements _AppParamState {
     return EqualUnmodifiableMapView(_keepWorkTruthMap);
   }
 
-//
+  ///
   @override
   @JsonKey()
   final bool isDisplayTruth;
 
+  ///
+  @override
+  @JsonKey()
+  final String selectedListYear;
+
   @override
   String toString() {
-    return 'AppParamState(keepWorkAnkenMap: $keepWorkAnkenMap, keepWorkContractMap: $keepWorkContractMap, keepWorkTruthMap: $keepWorkTruthMap, isDisplayTruth: $isDisplayTruth)';
+    return 'AppParamState(keepWorkAnkenMap: $keepWorkAnkenMap, keepWorkContractMap: $keepWorkContractMap, keepWorkTruthMap: $keepWorkTruthMap, isDisplayTruth: $isDisplayTruth, selectedListYear: $selectedListYear)';
   }
 
   @override
@@ -204,7 +227,9 @@ class _$AppParamStateImpl implements _AppParamState {
             const DeepCollectionEquality()
                 .equals(other._keepWorkTruthMap, _keepWorkTruthMap) &&
             (identical(other.isDisplayTruth, isDisplayTruth) ||
-                other.isDisplayTruth == isDisplayTruth));
+                other.isDisplayTruth == isDisplayTruth) &&
+            (identical(other.selectedListYear, selectedListYear) ||
+                other.selectedListYear == selectedListYear));
   }
 
   @override
@@ -213,7 +238,8 @@ class _$AppParamStateImpl implements _AppParamState {
       const DeepCollectionEquality().hash(_keepWorkAnkenMap),
       const DeepCollectionEquality().hash(_keepWorkContractMap),
       const DeepCollectionEquality().hash(_keepWorkTruthMap),
-      isDisplayTruth);
+      isDisplayTruth,
+      selectedListYear);
 
   /// Create a copy of AppParamState
   /// with the given fields replaced by the non-null parameter values.
@@ -229,16 +255,23 @@ abstract class _AppParamState implements AppParamState {
       {final Map<String, WorkAnkenModel> keepWorkAnkenMap,
       final Map<String, WorkContractModel> keepWorkContractMap,
       final Map<String, WorkTruthModel> keepWorkTruthMap,
-      final bool isDisplayTruth}) = _$AppParamStateImpl;
+      final bool isDisplayTruth,
+      final String selectedListYear}) = _$AppParamStateImpl;
 
   @override
   Map<String, WorkAnkenModel> get keepWorkAnkenMap;
   @override
   Map<String, WorkContractModel> get keepWorkContractMap;
   @override
-  Map<String, WorkTruthModel> get keepWorkTruthMap; //
+  Map<String, WorkTruthModel> get keepWorkTruthMap;
+
+  ///
   @override
   bool get isDisplayTruth;
+
+  ///
+  @override
+  String get selectedListYear;
 
   /// Create a copy of AppParamState
   /// with the given fields replaced by the non-null parameter values.

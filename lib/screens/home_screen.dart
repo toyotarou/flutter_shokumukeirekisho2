@@ -7,6 +7,7 @@ import '../main.dart';
 import '../models/work_anken_model.dart';
 import '../models/work_contract_model.dart';
 import '../models/work_truth_model.dart';
+import '../utility/utility.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key, required this.workAnkenMap, required this.workContractMap, required this.workTruthMap});
@@ -23,6 +24,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
   List<String> yearList = <String>[];
 
   List<GlobalKey> globalKeyList = <GlobalKey<State<StatefulWidget>>>[];
+
+  Utility utility = Utility();
 
   ///
   @override
@@ -46,62 +49,69 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
       backgroundColor: Colors.transparent,
 
       body: SafeArea(
-        child: DefaultTextStyle(
-          style: const TextStyle(color: Colors.white),
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            utility.getBackGround(),
 
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+            DefaultTextStyle(
+              style: const TextStyle(color: Colors.white),
+
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
                   children: <Widget>[
-                    Column(
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        const Text('work history'),
-                        const SizedBox(height: 10),
-                        GestureDetector(
-                          onTap: () {
-                            scrollToIndex(0);
-
-                            context.findAncestorStateOfType<AppRootState>()?.restartApp();
-                          },
-
-                          child: Icon(Icons.refresh, color: Colors.white.withValues(alpha: 0.6)),
-                        ),
-                      ],
-                    ),
-
-                    Row(
-                      children: <Widget>[
-                        const Text('false / true'),
                         Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Switch(
-                              value: appParamState.isDisplayTruth,
-                              onChanged: (bool value) {
-                                appParamNotifier.setIsDisplayTruth(flag: value);
-                              },
-                            ),
+                            const Text('work history'),
+                            const SizedBox(height: 10),
+                            GestureDetector(
+                              onTap: () {
+                                appParamNotifier.setSelectedListYear(year: '');
 
-                            const Row(children: <Widget>[Text('f'), SizedBox(width: 20), Text('t')]),
+                                context.findAncestorStateOfType<AppRootState>()?.restartApp();
+                              },
+
+                              child: Icon(Icons.refresh, color: Colors.white.withValues(alpha: 0.6)),
+                            ),
+                          ],
+                        ),
+
+                        Row(
+                          children: <Widget>[
+                            const Text('false / true'),
+                            Column(
+                              children: <Widget>[
+                                Switch(
+                                  value: appParamState.isDisplayTruth,
+                                  onChanged: (bool value) {
+                                    appParamNotifier.setIsDisplayTruth(flag: value);
+                                  },
+                                ),
+
+                                const Row(children: <Widget>[Text('f'), SizedBox(width: 20), Text('t')]),
+                              ],
+                            ),
                           ],
                         ),
                       ],
                     ),
+
+                    Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
+
+                    displaySelectYearParts(),
+
+                    Expanded(child: displayWorkHistoryList()),
                   ],
                 ),
-
-                Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
-
-                displaySelectYearParts(),
-
-                Expanded(child: displayWorkHistoryList()),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
@@ -118,9 +128,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 5),
               child: GestureDetector(
-                onTap: () => scrollToIndex(yearList.indexWhere((String element) => element == e)),
+                onTap: () {
+                  appParamNotifier.setSelectedListYear(year: e);
+
+                  scrollToIndex(yearList.indexWhere((String element) => element == e));
+                },
                 child: CircleAvatar(
-                  backgroundColor: Colors.blueGrey.withValues(alpha: 0.4),
+                  backgroundColor: (appParamState.selectedListYear == e)
+                      ? Colors.yellowAccent.withValues(alpha: 0.4)
+                      : Colors.blueGrey.withValues(alpha: 0.4),
                   child: Text(e, style: const TextStyle(fontSize: 12)),
                 ),
               ),
