@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../controllers/controllers_mixin.dart';
 import '../extensions/extensions.dart';
+import '../main.dart';
 import '../models/work_anken_model.dart';
 import '../models/work_contract_model.dart';
 import '../models/work_truth_model.dart';
@@ -19,7 +20,7 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<HomeScreen> {
-  List<String> yearMonthList = <String>[];
+  List<String> yearList = <String>[];
 
   ///
   @override
@@ -43,24 +44,72 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
               children: <Widget>[
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    const Text('work history'),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        const Text('work history'),
+                        const SizedBox(height: 10),
+                        GestureDetector(
+                          onTap: () {
+                            context.findAncestorStateOfType<AppRootState>()?.restartApp();
+                          },
 
-                    Switch(
-                      value: appParamState.isDisplayTruth,
-                      onChanged: (bool value) {
-                        appParamNotifier.setIsDisplayTruth(flag: value);
-                      },
+                          child: Icon(Icons.refresh, color: Colors.white.withValues(alpha: 0.6)),
+                        ),
+                      ],
+                    ),
+
+                    Row(
+                      children: <Widget>[
+                        const Text('false / true'),
+                        Column(
+                          children: <Widget>[
+                            Switch(
+                              value: appParamState.isDisplayTruth,
+                              onChanged: (bool value) {
+                                appParamNotifier.setIsDisplayTruth(flag: value);
+                              },
+                            ),
+
+                            const Row(children: <Widget>[Text('f'), SizedBox(width: 20), Text('t')]),
+                          ],
+                        ),
+                      ],
                     ),
                   ],
                 ),
 
                 Divider(color: Colors.white.withOpacity(0.4), thickness: 5),
 
+                displaySelectYearParts(),
+
                 Expanded(child: displayWorkHistoryList()),
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  ///
+  Widget displaySelectYearParts() {
+    return SizedBox(
+      height: 60,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: yearList.map((String e) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              child: CircleAvatar(
+                backgroundColor: Colors.blueGrey.withValues(alpha: 0.4),
+                child: Text(e, style: const TextStyle(fontSize: 12)),
+              ),
+            );
+          }).toList(),
         ),
       ),
     );
@@ -96,7 +145,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
         final WorkTruthModel? truth = widget.workTruthMap[yearMonth];
 
         if (!ymList.contains(yearMonth)) {
-          yearMonthList.add(yearMonth);
+          if (!yearList.contains(yearMonth.split('-')[0])) {
+            yearList.add(yearMonth.split('-')[0]);
+          }
 
           if (keepYear != yearMonth.split('-')[0]) {
             list.add(
@@ -176,18 +227,25 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
                           Expanded(child: Text(yearMonth)),
                           SizedBox(
                             width: context.screenSize.width * 0.6,
-                            child: Text(
-                              (anken != null) ? anken.name : '',
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  (anken != null) ? anken.name : '',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
 
-                              style: TextStyle(
-                                color: (anken == null)
-                                    ? Colors.transparent
-                                    : (anken.name != keepValue && anken.name != '-')
-                                    ? Colors.white
-                                    : Colors.white.withValues(alpha: 0.4),
-                              ),
+                                  style: TextStyle(
+                                    color: (anken == null)
+                                        ? Colors.transparent
+                                        : (anken.name != keepValue && anken.name != '-')
+                                        ? Colors.white
+                                        : Colors.white.withValues(alpha: 0.4),
+                                  ),
+                                ),
+
+                                Text(''),
+                              ],
                             ),
                           ),
 
