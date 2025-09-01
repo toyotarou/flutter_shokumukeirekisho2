@@ -24,8 +24,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
   List<String> yearList = <String>[];
 
   List<GlobalKey> globalKeyList = <GlobalKey<State<StatefulWidget>>>[];
+  List<GlobalKey> globalKeyList2 = <GlobalKey<State<StatefulWidget>>>[];
 
   Utility utility = Utility();
+
+  List<int> listItemsIndexes = <int>[];
 
   ///
   @override
@@ -34,6 +37,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
 
     // ignore: always_specify_types
     globalKeyList = List.generate(300, (int index) => GlobalKey());
+
+    // ignore: always_specify_types
+    globalKeyList2 = List.generate(300, (int index) => GlobalKey());
   }
 
   ///
@@ -51,7 +57,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
       body: SafeArea(
         child: Stack(
           fit: StackFit.expand,
-          children: [
+          children: <Widget>[
             utility.getBackGround(),
 
             DefaultTextStyle(
@@ -91,6 +97,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
                                   value: appParamState.isDisplayTruth,
                                   onChanged: (bool value) {
                                     appParamNotifier.setIsDisplayTruth(flag: value);
+
+                                    appParamNotifier.setListItemIndex(index: 0);
                                   },
                                 ),
 
@@ -121,28 +129,64 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
   Widget displaySelectYearParts() {
     return SizedBox(
       height: 60,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: yearList.map((String e) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5),
-              child: GestureDetector(
-                onTap: () {
-                  appParamNotifier.setSelectedListYear(year: e);
+      child: Row(
+        children: <Widget>[
+          IconButton(
+            onPressed: () {
+              int num = appParamState.listItemIndex - 1;
+              if (num < 0) {
+                num = 0;
+              }
 
-                  scrollToIndex(yearList.indexWhere((String element) => element == e));
-                },
-                child: CircleAvatar(
-                  backgroundColor: (appParamState.selectedListYear == e)
-                      ? Colors.yellowAccent.withValues(alpha: 0.4)
-                      : Colors.blueGrey.withValues(alpha: 0.4),
-                  child: Text(e, style: const TextStyle(fontSize: 12)),
-                ),
+              appParamNotifier.setListItemIndex(index: num);
+
+              scrollToIndex2(num);
+            },
+            icon: const Icon(Icons.arrow_back_ios),
+          ),
+          IconButton(
+            onPressed: () {
+              int num = appParamState.listItemIndex + 1;
+
+              final List<int> tempList = listItemsIndexes.toSet().toList();
+
+              if (num >= tempList.length) {
+                num = tempList.length - 2;
+              }
+
+              appParamNotifier.setListItemIndex(index: num);
+
+              scrollToIndex2(num);
+            },
+            icon: const Icon(Icons.arrow_forward_ios),
+          ),
+
+          Expanded(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: yearList.map((String e) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    child: GestureDetector(
+                      onTap: () {
+                        appParamNotifier.setSelectedListYear(year: e);
+
+                        scrollToIndex(yearList.indexWhere((String element) => element == e));
+                      },
+                      child: CircleAvatar(
+                        backgroundColor: (appParamState.selectedListYear == e)
+                            ? Colors.yellowAccent.withValues(alpha: 0.4)
+                            : Colors.blueGrey.withValues(alpha: 0.4),
+                        child: Text(e, style: const TextStyle(fontSize: 12)),
+                      ),
+                    ),
+                  );
+                }).toList(),
               ),
-            );
-          }).toList(),
-        ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -150,6 +194,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
   ///
   Future<void> scrollToIndex(int index) async {
     final BuildContext target = globalKeyList[index].currentContext!;
+
+    await Scrollable.ensureVisible(target, duration: const Duration(milliseconds: 1000));
+  }
+
+  ///
+  Future<void> scrollToIndex2(int index) async {
+    final BuildContext target = globalKeyList2[index].currentContext!;
 
     await Scrollable.ensureVisible(target, duration: const Duration(milliseconds: 1000));
   }
@@ -173,6 +224,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
       String keepYear = '';
 
       int j = 0;
+      int k = 0;
       for (int i = 0; i < diffDays; i++) {
         final String yearMonth = DateTime(
           first.value.year.toInt(),
@@ -262,7 +314,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
                           if (truth == null || truth.name == keepValue || truth.name == '-')
                             const Icon(Icons.square_outlined, color: Colors.transparent)
                           else
-                            Icon(Icons.info, color: Colors.white.withValues(alpha: 0.6)),
+                            Icon(key: globalKeyList2[k], Icons.info, color: Colors.white.withValues(alpha: 0.6)),
                         ],
                       )
                     : Row(
@@ -297,12 +349,26 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
                           if (anken == null || anken.name == keepValue || anken.name == '-')
                             const Icon(Icons.square_outlined, color: Colors.transparent)
                           else
-                            Icon(Icons.info, color: Colors.white.withValues(alpha: 0.6)),
+                            Icon(key: globalKeyList2[k], Icons.info, color: Colors.white.withValues(alpha: 0.6)),
                         ],
                       ),
               ),
             ),
           );
+
+          if (appParamState.isDisplayTruth) {
+            if (truth != null && truth.name != keepValue && truth.name != '-') {
+              listItemsIndexes.add(k);
+
+              k++;
+            }
+          } else {
+            if (anken != null && anken.name != keepValue && anken.name != '-') {
+              listItemsIndexes.add(k);
+
+              k++;
+            }
+          }
 
           if (appParamState.isDisplayTruth) {
             if (truth != null) {

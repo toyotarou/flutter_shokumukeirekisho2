@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 class Utility {
   /// 背景取得
-  // ignore: type_annotate_public_apis
+
+  // ignore: always_specify_types
   Widget getBackGround({context}) {
     return Image.asset(
       'assets/images/shokumu_bg.png',
