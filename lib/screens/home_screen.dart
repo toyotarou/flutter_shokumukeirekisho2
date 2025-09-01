@@ -256,7 +256,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
                             width: context.screenSize.width * 0.6,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
+                              children: <Widget>[
                                 Text(
                                   (anken != null) ? anken.name : '',
                                   maxLines: 1,
@@ -271,7 +271,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
                                   ),
                                 ),
 
-                                Text(''),
+                                const Text(''),
                               ],
                             ),
                           ),
