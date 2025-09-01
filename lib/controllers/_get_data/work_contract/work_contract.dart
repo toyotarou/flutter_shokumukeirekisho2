@@ -77,7 +77,7 @@ class WorkContract extends _$WorkContract {
         yearMonthList.add(yearMonth);
       }
 
-      return state.copyWith();
+      return state.copyWith(workContractList: list, workContractMap: map);
     } catch (e) {
       utility.showError('予期せぬエラーが発生しました');
       rethrow; // これにより呼び出し元でキャッチできる

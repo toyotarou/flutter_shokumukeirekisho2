@@ -6,7 +6,7 @@ part of 'work_contract.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$workContractHash() => r'af4ef42e6f074d9bd1b93e81cd72fb9dcf3431f1';
+String _$workContractHash() => r'8d60603bcdccb151755ee23c58d4c506ff514c4e';
 
 /// See also [WorkContract].
 @ProviderFor(WorkContract)

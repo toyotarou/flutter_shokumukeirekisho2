@@ -16,6 +16,9 @@ class AppParamState with _$AppParamState {
     @Default(<String, WorkAnkenModel>{}) Map<String, WorkAnkenModel> keepWorkAnkenMap,
     @Default(<String, WorkContractModel>{}) Map<String, WorkContractModel> keepWorkContractMap,
     @Default(<String, WorkTruthModel>{}) Map<String, WorkTruthModel> keepWorkTruthMap,
+
+    //
+    @Default(false) bool isDisplayTruth,
   }) = _AppParamState;
 }
 
@@ -36,4 +39,9 @@ class AppParam extends _$AppParam {
 
   ///
   void setKeepWorkTruthMap({required Map<String, WorkTruthModel> map}) => state = state.copyWith(keepWorkTruthMap: map);
+
+  ///////////////////////////////////////////////
+
+  ///
+  void setIsDisplayTruth({required bool flag}) => state = state.copyWith(isDisplayTruth: flag);
 }
