@@ -8,6 +8,9 @@ import '../models/work_anken_model.dart';
 import '../models/work_contract_model.dart';
 import '../models/work_truth_model.dart';
 import '../utility/utility.dart';
+import 'components/anken_data_display_alert.dart';
+import 'components/truth_data_display_alert.dart';
+import 'parts/shokumukeirekisho_dialog.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key, required this.workAnkenMap, required this.workContractMap, required this.workTruthMap});
@@ -331,10 +334,36 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
                                       ),
                                     );
                                   },
-                                  child: Icon(Icons.location_on, color: Colors.white.withValues(alpha: 0.6)),
+                                  child: Icon(
+                                    Icons.star,
+                                    color:
+                                        (appParamState.listItemIndex ==
+                                            itemsIndexYearMonthList.indexWhere(
+                                              (String element) => element == yearMonth,
+                                            ))
+                                        ? Colors.redAccent.withValues(alpha: 0.6)
+                                        : Colors.white.withValues(alpha: 0.6),
+                                  ),
                                 ),
                                 const SizedBox(width: 10),
-                                Icon(key: globalKeyList2[k], Icons.info, color: Colors.white.withValues(alpha: 0.6)),
+                                GestureDetector(
+                                  onTap: () {
+                                    appParamNotifier.setSelectedListYearMonth(yearmonth: yearMonth);
+
+                                    ShokumukeirekishoDialog(
+                                      context: context,
+                                      widget: TruthDataDisplayAlert(yearmonth: yearMonth),
+                                    );
+                                  },
+
+                                  child: Icon(
+                                    key: globalKeyList2[k],
+                                    Icons.info,
+                                    color: (appParamState.selectedListYearMonth == yearMonth)
+                                        ? Colors.yellowAccent.withValues(alpha: 0.6)
+                                        : Colors.white.withValues(alpha: 0.6),
+                                  ),
+                                ),
                               ],
                             ),
                         ],
@@ -387,10 +416,46 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
                                       ),
                                     );
                                   },
-                                  child: Icon(Icons.location_on, color: Colors.white.withValues(alpha: 0.6)),
+                                  child: Icon(
+                                    Icons.star,
+                                    color:
+                                        (appParamState.listItemIndex ==
+                                            itemsIndexYearMonthList.indexWhere(
+                                              (String element) => element == yearMonth,
+                                            ))
+                                        ? Colors.redAccent.withValues(alpha: 0.6)
+                                        : Colors.white.withValues(alpha: 0.6),
+                                  ),
                                 ),
                                 const SizedBox(width: 10),
-                                Icon(key: globalKeyList2[k], Icons.info, color: Colors.white.withValues(alpha: 0.6)),
+                                GestureDetector(
+                                  onTap: () {
+                                    appParamNotifier.setSelectedListYearMonth(yearmonth: yearMonth);
+
+                                    ShokumukeirekishoDialog(
+                                      context: context,
+                                      widget: AnkenDataDisplayAlert(
+                                        yearmonth: yearMonth,
+
+                                        itemsIndexYearMonthList: itemsIndexYearMonthList,
+                                        pos: itemsIndexYearMonthList.indexWhere(
+                                          (String element) => element == yearMonth,
+                                        ),
+                                      ),
+                                      executeFunctionWhenDialogClose: true,
+                                      ref: ref,
+                                      from: 'AnkenDataDisplayAlert',
+                                    );
+                                  },
+
+                                  child: Icon(
+                                    key: globalKeyList2[k],
+                                    Icons.info,
+                                    color: (appParamState.selectedListYearMonth == yearMonth)
+                                        ? Colors.yellowAccent.withValues(alpha: 0.6)
+                                        : Colors.white.withValues(alpha: 0.6),
+                                  ),
+                                ),
                               ],
                             ),
                         ],

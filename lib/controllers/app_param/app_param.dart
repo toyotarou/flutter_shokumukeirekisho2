@@ -25,6 +25,9 @@ class AppParamState with _$AppParamState {
 
     ///
     @Default(0) int listItemIndex,
+
+    ///
+    @Default('') String selectedListYearMonth,
   }) = _AppParamState;
 }
 
@@ -56,4 +59,8 @@ class AppParam extends _$AppParam {
 
   ///
   void setListItemIndex({required int index}) => state = state.copyWith(listItemIndex: index);
+
+  ///
+  void setSelectedListYearMonth({required String yearmonth}) =>
+      state = state.copyWith(selectedListYearMonth: yearmonth);
 }

@@ -32,6 +32,9 @@ mixin _$AppParamState {
   ///
   int get listItemIndex => throw _privateConstructorUsedError;
 
+  ///
+  String get selectedListYearMonth => throw _privateConstructorUsedError;
+
   /// Create a copy of AppParamState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -51,7 +54,8 @@ abstract class $AppParamStateCopyWith<$Res> {
       Map<String, WorkTruthModel> keepWorkTruthMap,
       bool isDisplayTruth,
       String selectedListYear,
-      int listItemIndex});
+      int listItemIndex,
+      String selectedListYearMonth});
 }
 
 /// @nodoc
@@ -75,6 +79,7 @@ class _$AppParamStateCopyWithImpl<$Res, $Val extends AppParamState>
     Object? isDisplayTruth = null,
     Object? selectedListYear = null,
     Object? listItemIndex = null,
+    Object? selectedListYearMonth = null,
   }) {
     return _then(_value.copyWith(
       keepWorkAnkenMap: null == keepWorkAnkenMap
@@ -101,6 +106,10 @@ class _$AppParamStateCopyWithImpl<$Res, $Val extends AppParamState>
           ? _value.listItemIndex
           : listItemIndex // ignore: cast_nullable_to_non_nullable
               as int,
+      selectedListYearMonth: null == selectedListYearMonth
+          ? _value.selectedListYearMonth
+          : selectedListYearMonth // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -119,7 +128,8 @@ abstract class _$$AppParamStateImplCopyWith<$Res>
       Map<String, WorkTruthModel> keepWorkTruthMap,
       bool isDisplayTruth,
       String selectedListYear,
-      int listItemIndex});
+      int listItemIndex,
+      String selectedListYearMonth});
 }
 
 /// @nodoc
@@ -141,6 +151,7 @@ class __$$AppParamStateImplCopyWithImpl<$Res>
     Object? isDisplayTruth = null,
     Object? selectedListYear = null,
     Object? listItemIndex = null,
+    Object? selectedListYearMonth = null,
   }) {
     return _then(_$AppParamStateImpl(
       keepWorkAnkenMap: null == keepWorkAnkenMap
@@ -167,6 +178,10 @@ class __$$AppParamStateImplCopyWithImpl<$Res>
           ? _value.listItemIndex
           : listItemIndex // ignore: cast_nullable_to_non_nullable
               as int,
+      selectedListYearMonth: null == selectedListYearMonth
+          ? _value.selectedListYearMonth
+          : selectedListYearMonth // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -183,7 +198,8 @@ class _$AppParamStateImpl implements _AppParamState {
           const <String, WorkTruthModel>{},
       this.isDisplayTruth = false,
       this.selectedListYear = '',
-      this.listItemIndex = 0})
+      this.listItemIndex = 0,
+      this.selectedListYearMonth = ''})
       : _keepWorkAnkenMap = keepWorkAnkenMap,
         _keepWorkContractMap = keepWorkContractMap,
         _keepWorkTruthMap = keepWorkTruthMap;
@@ -231,9 +247,14 @@ class _$AppParamStateImpl implements _AppParamState {
   @JsonKey()
   final int listItemIndex;
 
+  ///
+  @override
+  @JsonKey()
+  final String selectedListYearMonth;
+
   @override
   String toString() {
-    return 'AppParamState(keepWorkAnkenMap: $keepWorkAnkenMap, keepWorkContractMap: $keepWorkContractMap, keepWorkTruthMap: $keepWorkTruthMap, isDisplayTruth: $isDisplayTruth, selectedListYear: $selectedListYear, listItemIndex: $listItemIndex)';
+    return 'AppParamState(keepWorkAnkenMap: $keepWorkAnkenMap, keepWorkContractMap: $keepWorkContractMap, keepWorkTruthMap: $keepWorkTruthMap, isDisplayTruth: $isDisplayTruth, selectedListYear: $selectedListYear, listItemIndex: $listItemIndex, selectedListYearMonth: $selectedListYearMonth)';
   }
 
   @override
@@ -252,7 +273,9 @@ class _$AppParamStateImpl implements _AppParamState {
             (identical(other.selectedListYear, selectedListYear) ||
                 other.selectedListYear == selectedListYear) &&
             (identical(other.listItemIndex, listItemIndex) ||
-                other.listItemIndex == listItemIndex));
+                other.listItemIndex == listItemIndex) &&
+            (identical(other.selectedListYearMonth, selectedListYearMonth) ||
+                other.selectedListYearMonth == selectedListYearMonth));
   }
 
   @override
@@ -263,7 +286,8 @@ class _$AppParamStateImpl implements _AppParamState {
       const DeepCollectionEquality().hash(_keepWorkTruthMap),
       isDisplayTruth,
       selectedListYear,
-      listItemIndex);
+      listItemIndex,
+      selectedListYearMonth);
 
   /// Create a copy of AppParamState
   /// with the given fields replaced by the non-null parameter values.
@@ -281,7 +305,8 @@ abstract class _AppParamState implements AppParamState {
       final Map<String, WorkTruthModel> keepWorkTruthMap,
       final bool isDisplayTruth,
       final String selectedListYear,
-      final int listItemIndex}) = _$AppParamStateImpl;
+      final int listItemIndex,
+      final String selectedListYearMonth}) = _$AppParamStateImpl;
 
   @override
   Map<String, WorkAnkenModel> get keepWorkAnkenMap;
@@ -301,6 +326,10 @@ abstract class _AppParamState implements AppParamState {
   ///
   @override
   int get listItemIndex;
+
+  ///
+  @override
+  String get selectedListYearMonth;
 
   /// Create a copy of AppParamState
   /// with the given fields replaced by the non-null parameter values.
