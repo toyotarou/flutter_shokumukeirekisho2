@@ -22,6 +22,17 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<HomeScreen> {
   List<String> yearList = <String>[];
 
+  List<GlobalKey> globalKeyList = <GlobalKey<State<StatefulWidget>>>[];
+
+  ///
+  @override
+  void initState() {
+    super.initState();
+
+    // ignore: always_specify_types
+    globalKeyList = List.generate(300, (int index) => GlobalKey());
+  }
+
   ///
   @override
   Widget build(BuildContext context) {
@@ -53,6 +64,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
                         const SizedBox(height: 10),
                         GestureDetector(
                           onTap: () {
+                            scrollToIndex(0);
+
                             context.findAncestorStateOfType<AppRootState>()?.restartApp();
                           },
 
@@ -104,15 +117,25 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
           children: yearList.map((String e) {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 5),
-              child: CircleAvatar(
-                backgroundColor: Colors.blueGrey.withValues(alpha: 0.4),
-                child: Text(e, style: const TextStyle(fontSize: 12)),
+              child: GestureDetector(
+                onTap: () => scrollToIndex(yearList.indexWhere((String element) => element == e)),
+                child: CircleAvatar(
+                  backgroundColor: Colors.blueGrey.withValues(alpha: 0.4),
+                  child: Text(e, style: const TextStyle(fontSize: 12)),
+                ),
               ),
             );
           }).toList(),
         ),
       ),
     );
+  }
+
+  ///
+  Future<void> scrollToIndex(int index) async {
+    final BuildContext target = globalKeyList[index].currentContext!;
+
+    await Scrollable.ensureVisible(target, duration: const Duration(milliseconds: 1000));
   }
 
   ///
@@ -133,6 +156,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
       String keepValue = '';
       String keepYear = '';
 
+      int j = 0;
       for (int i = 0; i < diffDays; i++) {
         final String yearMonth = DateTime(
           first.value.year.toInt(),
@@ -152,6 +176,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
           if (keepYear != yearMonth.split('-')[0]) {
             list.add(
               Container(
+                key: globalKeyList[j],
                 decoration: BoxDecoration(color: Colors.yellowAccent.withValues(alpha: 0.2)),
                 margin: const EdgeInsets.only(top: 5, bottom: 2),
 
@@ -161,6 +186,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
                 ),
               ),
             );
+
+            j++;
           }
 
           list.add(
@@ -278,15 +305,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with ControllersMixin<H
       }
     }
 
-    return CustomScrollView(
-      slivers: <Widget>[
-        SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (BuildContext context, int index) => list[index],
-            childCount: list.length,
-          ),
-        ),
-      ],
-    );
+    return SingleChildScrollView(child: Column(children: list));
   }
 }
